@@ -1,0 +1,36 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "io.wyrmise.meen"
+        minSdkVersion 19
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: '*.jar', dir: 'libs')
+    compile('com.melnykov:floatingactionbutton:1.2.0') {
+        exclude module: 'support-v4'
+    }
+    compile(project(':SwipeLibrary')) {
+        exclude module: 'support-v4'
+    }
+    compile 'me.drakeet.materialdialog:library:1.2.2'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.pnikosis:materialish-progress:1.4'
+    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.hannesdorfmann:swipeback:1.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
+}

@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sendLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.wyrmise.melriss.SendActivity" >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <ImageButton
+        android:id="@+id/sendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:background="@null"
+        android:src="@drawable/ic_action_send_now" />
+
+    <TextView
+        android:id="@+id/charCountSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/msg_edit"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="20sp"
+        android:layout_toLeftOf="@id/sendBtn"
+        android:layout_toStartOf="@id/sendBtn"
+        android:text="160"
+        android:textColor="@color/dark_green"/>
+
+    <EditText
+        android:id="@+id/msg_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5sp"
+        android:layout_toLeftOf="@+id/sendBtn"
+        android:layout_toStartOf="@+id/sendBtn"
+        android:ellipsize="end"
+        android:hint="@string/msg_hint"
+        android:imeOptions="flagNoFullscreen"
+        android:inputType="text"
+        android:lines="1"
+        android:paddingEnd="27sp"
+        android:paddingRight="27sp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColorHint="#C2C2C2"/>
+
+    <EditText
+        android:id="@+id/phone_edit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5sp"
+        android:layout_marginTop="10sp"
+        android:layout_below="@id/toolbar"
+        android:ellipsize="end"
+        android:hint="@string/phone_hint"
+        android:inputType="phone"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#C2C2C2" />
+
+
+</RelativeLayout>

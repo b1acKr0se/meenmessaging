@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="backgroundArray">
+        <item>White background</item>
+        <item>Background with picture</item>
+    </string-array>
+    <string-array name="backgroundValues">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="actionBarArray">
+        <item>Green</item>
+        <item>Light Green</item>
+        <item>Lime</item>
+        <item>Blue</item>
+        <item>Cyan</item>
+        <item>Teal</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Amber</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Brown</item>
+
+    </string-array>
+    <string-array name="actionBarValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string-array name="fabArray">
+        <item>Green</item>
+        <item>Light Green</item>
+        <item>Lime</item>
+        <item>Blue</item>
+        <item>Cyan</item>
+        <item>Teal</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Amber</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Brown</item>
+
+    </string-array>
+    <string-array name="fabValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+    <string-array name="fontsArray">
+        <item>Default font</item>
+        <item>Helvetica</item>
+    </string-array>
+    <string-array name="fontValues">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

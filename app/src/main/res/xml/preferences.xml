@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_general_settings"
+        android:title="@string/setting_general" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_popup_mode"
+            android:summary="@string/popup_summary"
+            android:title="@string/popup_title"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_delay_mode"
+            android:summary="@string/delay_summary"
+            android:title="@string/delay_title"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_swipe_back"
+            android:summary="@string/swipe_summary"
+            android:title="@string/swipe_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_ui_settings"
+        android:title="@string/setting_ui" >
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/backgroundArray"
+            android:entryValues="@array/backgroundValues"
+            android:key="pref_background_pic"
+            android:numeric="integer"
+            android:summary="@string/background_sum"
+            android:title="@string/background_title" />
+        <ListPreference
+            android:defaultValue="4"
+            android:entries="@array/actionBarArray"
+            android:entryValues="@array/actionBarValues"
+            android:key="pref_actionbar_color"
+            android:numeric="integer"
+            android:summary="@string/action_bar_summary"
+            android:title="@string/action_bar_title" />
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/fabArray"
+            android:entryValues="@array/fabValues"
+            android:key="pref_fab_color"
+            android:numeric="integer"
+            android:summary="@string/fab_summary"
+            android:title="@string/fab_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_night_mode"
+            android:summary="@string/night_mode_summary"
+            android:title="@string/night_mode_title"/>
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/fontsArray"
+            android:entryValues="@array/fontValues"
+            android:key="pref_font_mode"
+            android:numeric="integer"
+            android:summary="@string/font_summary"
+            android:title="@string/font_title"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
