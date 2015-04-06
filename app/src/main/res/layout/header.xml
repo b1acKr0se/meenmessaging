@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -24,9 +23,7 @@
             android:text="Akash Bangad"
             android:textColor="#ffffff"
             android:textSize="14sp"
-            android:textStyle="bold"
-
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/id"

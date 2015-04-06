@@ -118,9 +118,9 @@ public class ThreadActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean key = pref.getBoolean(SettingsActivity.KEY_SWIPE_BACK,true);
-        if(key)
-            SwipeBack.attach(this,Position.LEFT).setContentView(R.layout.activity_thread).setSwipeBackView(R.layout.swipeback_default);
+        boolean key = pref.getBoolean(SettingsActivity.KEY_SWIPE_BACK, true);
+        if (key)
+            SwipeBack.attach(this, Position.LEFT).setContentView(R.layout.activity_thread).setSwipeBackView(R.layout.swipeback_default);
         else
             setContentView(R.layout.activity_thread);
 
@@ -173,9 +173,9 @@ public class ThreadActivity extends ActionBarActivity implements
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(msg_edit.getText().length()==0){
-                    Toast.makeText(getApplicationContext(),"You must enter the message!",Toast.LENGTH_LONG).show();
-                    Log.d("No char","edt");
+                if (msg_edit.getText().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "You must enter the message!", Toast.LENGTH_LONG).show();
+                    Log.d("No char", "edt");
                 } else {
                     if (getMode) {
                         delaySendProgressWheel.setProgress(0);
@@ -227,7 +227,7 @@ public class ThreadActivity extends ActionBarActivity implements
         listView = (ListView) findViewById(R.id.thread_view);
         listView.setOnItemClickListener(this);
 
-        if(!MainActivity.cacheThread.containsKey(phoneNum)){
+        if (!MainActivity.cacheThread.containsKey(phoneNum)) {
             new getThreadMessageTask().execute();
         } else {
             this.message = MainActivity.cacheThread.get(phoneNum);
@@ -244,7 +244,7 @@ public class ThreadActivity extends ActionBarActivity implements
     public void populateThread() {
         msgAdapter = new ThreadAdapter(this, R.layout.list_view_thread, message);
         msgAdapter.setArrayList(this.message);
-        MainActivity.cacheThread.put(phoneNum,this.message);
+        MainActivity.cacheThread.put(phoneNum, this.message);
         listView.setAdapter(msgAdapter);
     }
 
@@ -271,10 +271,10 @@ public class ThreadActivity extends ActionBarActivity implements
         Uri uriSms = Uri.parse("content://sms/");
         Cursor cursor = this.getContentResolver()
                 .query(uriSms,
-                        new String[] { "_id", "address", "date", "body",
-                                "type", "read" }, "address='"+actualPhone+"' OR address='"+actualPhone.replace(" ", "")+"'", null,
+                        new String[]{"_id", "address", "date", "body",
+                                "type", "read"}, "address='" + actualPhone + "' OR address='" + actualPhone.replace(" ", "") + "'", null,
                         "date" + " asc");
-        System.out.println("Actual phone: " +actualPhone);
+        System.out.println("Actual phone: " + actualPhone);
         if (cursor != null) {
             cursor.moveToFirst();
             if (cursor.getCount() > 0) {
@@ -289,8 +289,8 @@ public class ThreadActivity extends ActionBarActivity implements
                     long milliSeconds = cursor.getLong(cursor
                             .getColumnIndex("date"));
                     message.readState = cursor.getInt(cursor.getColumnIndex("read"));
-                    SimpleDateFormat initFormat = new SimpleDateFormat("MMM dd",Locale.US);
-                    SimpleDateFormat hours = new SimpleDateFormat("h:mm a",Locale.US);
+                    SimpleDateFormat initFormat = new SimpleDateFormat("MMM dd", Locale.US);
+                    SimpleDateFormat hours = new SimpleDateFormat("h:mm a", Locale.US);
 
                     Calendar calendar = Calendar.getInstance();
 
@@ -300,10 +300,10 @@ public class ThreadActivity extends ActionBarActivity implements
                     Date now = new Date();
                     String strDate = initFormat.format(now);
 
-                    if(finalDateString.equals(strDate)) {
+                    if (finalDateString.equals(strDate)) {
                         finalDateString = hours.format(calendar.getTime());
                         message.messageDate = finalDateString;
-                    }else {
+                    } else {
                         finalDateString = initFormat.format(calendar.getTime());
                         message.messageDate = finalDateString;
                     }
@@ -318,7 +318,7 @@ public class ThreadActivity extends ActionBarActivity implements
                     }
                     if (message.messageNumber.equals(phoneNum)) {
                         message.readState = 1;
-                        NewSmsBroadcastReceiver.markSmsAsRead(this,message.originalAddress,message.messageContent);
+                        NewSmsBroadcastReceiver.markSmsAsRead(this, message.originalAddress, message.messageContent);
                         String type = cursor.getString(cursor
                                 .getColumnIndex("type"));
                         int checkType = Integer.parseInt(type);
@@ -326,7 +326,7 @@ public class ThreadActivity extends ActionBarActivity implements
                             message.messageNumber = "Me";
                         this.message.add(message);
                     } else {
-                        System.out.println("not equal : "+ message.messageNumber + " "+phoneNum);
+                        System.out.println("not equal : " + message.messageNumber + " " + phoneNum);
                     }
                 } while (cursor.moveToNext());
                 cursor.close();
@@ -345,7 +345,7 @@ public class ThreadActivity extends ActionBarActivity implements
         String msg = msg_edit.getText().toString();
 
         String phoneNumber = getPhoneNumber(phoneNum, this);
-        if(phoneNumber==null) phoneNumber = phoneNum;
+        if (phoneNumber == null) phoneNumber = phoneNum;
         if (phoneNumber.length() > 0 && msg != null && msg.length() > 0) {
             try {
                 Message message = new Message();
@@ -522,8 +522,8 @@ public class ThreadActivity extends ActionBarActivity implements
                 return true;
             case R.id.action_call:
                 String phone = getPhoneNumber(phoneNum, this);
-                if(phone==null) phone = phoneNum;
-                String uri = "tel:" + phone.trim() ;
+                if (phone == null) phone = phoneNum;
+                String uri = "tel:" + phone.trim();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse(uri));
                 startActivity(intent);
@@ -576,7 +576,7 @@ public class ThreadActivity extends ActionBarActivity implements
         @Override
         protected void onPreExecute() {
             sendProgressBar.setVisibility(ProgressBar.VISIBLE);
-            Toast.makeText(getApplicationContext(),"Sending your message, please wait...",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Sending your message, please wait...", Toast.LENGTH_SHORT).show();
             message = sendFakeSMS();
             super.onPreExecute();
         }
