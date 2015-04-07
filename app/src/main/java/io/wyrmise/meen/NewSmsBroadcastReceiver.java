@@ -134,6 +134,7 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         Toast.makeText(context, "SMS from " + message.messageNumber,
                 Toast.LENGTH_SHORT).show();
         mBuilder.setSmallIcon(R.drawable.notification_icon);
+        mBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
         Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_launcher);
         mBuilder.setLargeIcon(largeIcon);
         mBuilder.setContentTitle(message.messageNumber);
