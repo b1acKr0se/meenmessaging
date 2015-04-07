@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v4.app.NotificationCompat;
@@ -882,11 +883,13 @@ public class MainActivity extends ActionBarActivity implements
                 Toast.LENGTH_SHORT).show();
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.icon_launcher)
+                .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(message.messageNumber)
                 .setContentText(message.messageContent)
                 .setAutoCancel(true)
                 .setSound(soundUri);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.icon_launcher);
+        mBuilder.setLargeIcon(largeIcon);
         Intent resultIntent = new Intent(this, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
         if (MessageAdapter.randomID.containsKey(message.messageNumber)) {
@@ -904,10 +907,15 @@ public class MainActivity extends ActionBarActivity implements
         Notification note = mBuilder.build();
         note.defaults |= Notification.DEFAULT_VIBRATE;
         note.defaults |= Notification.DEFAULT_SOUND;
+        note.defaults |= Notification.DEFAULT_LIGHTS;
 
         // notificationID allows you to update the notification later on.
         mNotificationManager.notify(notificationID, mBuilder.build());
         getSystemService(Context.AUDIO_SERVICE);
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+        wl.acquire(5000);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean getMode = prefs.getBoolean(SettingsActivity.KEY_POPUP_MODE, true);

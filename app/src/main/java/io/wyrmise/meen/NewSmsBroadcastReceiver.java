@@ -10,13 +10,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
+import android.os.PowerManager.WakeLock;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -129,7 +133,9 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             message.messageNumber = contactPrefs.getString(number, null);
         Toast.makeText(context, "SMS from " + message.messageNumber,
                 Toast.LENGTH_SHORT).show();
-        mBuilder.setSmallIcon(R.drawable.icon_launcher);
+        mBuilder.setSmallIcon(R.drawable.notification_icon);
+        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_launcher);
+        mBuilder.setLargeIcon(largeIcon);
         mBuilder.setContentTitle(message.messageNumber);
         mBuilder.setContentText(message.messageContent);
         mBuilder.setAutoCancel(true);
@@ -137,7 +143,7 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
 
         Intent resultIntent = new Intent(context, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
-
+        resultIntent.putExtra("originalAddress", message.originalAddress);
         if(colorPrefs.getInt(message.messageNumber,-1)!=-1)
             resultIntent.putExtra("Color",colorPrefs.getInt(message.messageNumber,-1));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -151,10 +157,15 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         Notification note = mBuilder.build();
         note.defaults |= Notification.DEFAULT_VIBRATE;
         note.defaults |= Notification.DEFAULT_SOUND;
+        note.defaults |= Notification.DEFAULT_LIGHTS;
+
         // notificationID allows you to update the notification later on.
         mNotificationManager.notify(notificationID, mBuilder.build());
         context.getSystemService(Context.AUDIO_SERVICE);
 
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+        wl.acquire(5000);
     }
 
 }
