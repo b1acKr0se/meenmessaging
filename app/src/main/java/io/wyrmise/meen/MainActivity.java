@@ -91,8 +91,10 @@ public class MainActivity extends ActionBarActivity implements
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
-    DrawerLayout Drawer;                                  // Declaring DrawerLayout
+    DrawerLayout drawerLayout;                                  // Declaring DrawerLayout
     ActionBarDrawerToggle mDrawerToggle;
+
+    private TextView noMessage;
 
     private int notificationID = 100; //based notification id
     private static final int TYPE_INCOMING_MESSAGE = 1;
@@ -528,8 +530,8 @@ public class MainActivity extends ActionBarActivity implements
         mRecyclerView.setLayoutManager(mLayoutManager);                 // Setting the layout Manager
 
 
-        Drawer = (DrawerLayout) findViewById(R.id.drawerLayout);        // Drawer object Assigned to the view
-        mDrawerToggle = new ActionBarDrawerToggle(this,Drawer,toolbar,R.string.drawer_open, R.string.drawer_close){
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);        // drawerLayout object Assigned to the view
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.drawer_open, R.string.drawer_close){
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -542,8 +544,8 @@ public class MainActivity extends ActionBarActivity implements
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
-        }; // Drawer Toggle Object Made
-        Drawer.setDrawerListener(mDrawerToggle); // Drawer Listener set to the Drawer toggle
+        }; // drawerLayout Toggle Object Made
+        drawerLayout.setDrawerListener(mDrawerToggle); // drawerLayout Listener set to the drawerLayout toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
@@ -588,6 +590,7 @@ public class MainActivity extends ActionBarActivity implements
         messageList = (SwipeMenuListView) findViewById(R.id.inbox_list);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
+        noMessage = (TextView) findViewById(R.id.no_message);
         onFabColorChanged(fab);
         fab.attachToListView(messageList, new ScrollDirectionListener() {
             @Override
@@ -769,7 +772,6 @@ public class MainActivity extends ActionBarActivity implements
             recordsStored = fetchInboxSms(TYPE_INCOMING_MESSAGE);
             listInboxMessages = recordsStored;
             contactPictureID = RetrieveContactPicture();
-
         } else {
             recordsStored = listInboxMessages;
             messageListAdapter.setArrayList(recordsStored);
@@ -880,8 +882,7 @@ public class MainActivity extends ActionBarActivity implements
         try {
             for (int i = 0; i < smsInbox.size(); i++) {
                 Message msg = (Message) smsInbox.get(i);
-                String number = msg.messageNumber.replace(" ", "").replace("-",
-                        "");
+                String number = msg.messageNumber.replace(" ", "").replace("-","");
                 if (getThreadSms.size() == 0)
                     getThreadSms.add(msg);
                 else {
@@ -929,7 +930,7 @@ public class MainActivity extends ActionBarActivity implements
                 Toast.LENGTH_SHORT).show();
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.ic_stat)
                 .setContentTitle(message.messageNumber)
                 .setContentText(message.messageContent)
                 .setAutoCancel(true)
@@ -960,7 +961,7 @@ public class MainActivity extends ActionBarActivity implements
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-        wl.acquire(5000);
+        wl.acquire(8000);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean getMode = prefs.getBoolean(SettingsActivity.KEY_POPUP_MODE, true);
@@ -1079,8 +1080,9 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
                             long id) {
-        if (mNotificationManager != null)
-            mNotificationManager.cancel(notificationID);
+        NotificationManager notif = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notif.cancelAll();
+
         Intent intent = new Intent(this, ThreadActivity.class);
 
         Message msg = (Message) messageList.getAdapter().getItem(position);
@@ -1095,17 +1097,16 @@ public class MainActivity extends ActionBarActivity implements
         if (MessageAdapter.randomID.containsKey(phone)) {
             intent.putExtra("Color", MessageAdapter.randomID.get(phone));
         }
-
         startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (Drawer.isDrawerOpen(mRecyclerView)) {
-                Drawer.closeDrawer(mRecyclerView);
+            if (drawerLayout.isDrawerOpen(mRecyclerView)) {
+                drawerLayout.closeDrawer(mRecyclerView);
             } else {
-                Drawer.openDrawer(mRecyclerView);
+                drawerLayout.openDrawer(mRecyclerView);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -1163,8 +1164,8 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onBackPressed() {
-        if(Drawer.isDrawerOpen(Gravity.START|Gravity.LEFT)){
-            Drawer.closeDrawers();
+        if(drawerLayout.isDrawerOpen(Gravity.START|Gravity.LEFT)){
+            drawerLayout.closeDrawers();
             return;
         }
         super.onBackPressed();
@@ -1181,11 +1182,16 @@ public class MainActivity extends ActionBarActivity implements
 
         @Override
         protected void onPostExecute(Boolean result) {
-            progressWheel.setVisibility(ProgressWheel.GONE);
-            messageList.setVisibility(ListView.VISIBLE);
-            fab.setVisibility(FloatingActionButton.VISIBLE);
-            Log.d("post execute: ", "true");
             populateMessageList();
+            if(recordsStored.size()>0) {
+                progressWheel.setVisibility(ProgressWheel.GONE);
+                messageList.setVisibility(ListView.VISIBLE);
+                fab.setVisibility(FloatingActionButton.VISIBLE);
+                noMessage.setVisibility(TextView.GONE);
+            } else {
+                noMessage.setVisibility(TextView.VISIBLE);
+                fab.setVisibility(FloatingActionButton.VISIBLE);
+            }
             super.onPostExecute(result);
         }
 
@@ -1249,6 +1255,5 @@ public class MainActivity extends ActionBarActivity implements
         roundBitMap.setAntiAlias(true);
         return roundBitMap;
     }
-
 
 }

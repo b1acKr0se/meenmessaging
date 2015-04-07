@@ -10,17 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
-import android.os.PowerManager.WakeLock;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -133,10 +132,8 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             message.messageNumber = contactPrefs.getString(number, null);
         Toast.makeText(context, "SMS from " + message.messageNumber,
                 Toast.LENGTH_SHORT).show();
-        mBuilder.setSmallIcon(R.drawable.notification_icon);
+        mBuilder.setSmallIcon(R.drawable.ic_stat);
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
-        Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_launcher);
-        mBuilder.setLargeIcon(largeIcon);
         mBuilder.setContentTitle(message.messageNumber);
         mBuilder.setContentText(message.messageContent);
         mBuilder.setAutoCancel(true);

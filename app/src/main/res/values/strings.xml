@@ -47,5 +47,6 @@
     <string name="to">To</string>
     <string name="call">Call this person</string>
     <string name="title_activity_send">SendActivity</string>
+    <string name="no_message">No Message</string>
 
 </resources>

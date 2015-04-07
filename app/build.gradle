@@ -33,4 +33,5 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.hannesdorfmann:swipeback:1.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.+'
+    compile 'com.klinkerapps:android-smsmms:+'
 }

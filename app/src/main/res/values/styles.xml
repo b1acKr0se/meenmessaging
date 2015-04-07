@@ -16,6 +16,9 @@
 
         <item name="android:windowTranslucentStatus">true</item>
 
+        <item name="actionModeBackground">@color/deep_orange</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+
     </style>
 
     <style name="Textured" parent="Theme.AppCompat.Light.NoActionBar">
@@ -38,6 +41,8 @@
              which is used to tint widgets -->
         <item name="colorAccent">@color/red</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="actionModeBackground">@color/red</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="RedActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
