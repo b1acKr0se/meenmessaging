@@ -99,8 +99,8 @@
 
         <activity
             android:name=".ThreadActivity"
-            android:label="@string/title_activity_thread"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:label="@string/title_activity_thread">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.wyrmise.meen.MainActivity" />
@@ -108,8 +108,8 @@
         <activity
             android:name=".SendActivity"
             android:label="@string/action_new"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.wyrmise.meen.MainActivity" />

@@ -6,11 +6,7 @@
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context="${relativePackage}.${activityClass}" >
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+    tools:context="${relativePackage}.${activityClass}">
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/send_delay"

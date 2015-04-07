@@ -7,12 +7,14 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     public ArrayList<Message> messageListArray;
     Holder holder;
     private Context ctx;
-
+    private SparseBooleanArray mSelectedItemsIds;
     /**
      * @param context
      * @param textViewResourceId
@@ -41,6 +43,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     public MessageAdapter(Context context, int textViewResourceId,
                           ArrayList<Message> messageListArray) {
         super(context, textViewResourceId);
+        mSelectedItemsIds = new SparseBooleanArray();
         this.messageListArray = messageListArray;
         this.ctx = context;
     }
@@ -225,6 +228,32 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             return a;
         }
     }
+
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+
+    public void removeSelection() {
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+
+    public void selectView(int position, boolean value) {
+        if (value)
+            mSelectedItemsIds.put(position, value);
+        else
+            mSelectedItemsIds.delete(position);
+        notifyDataSetChanged();
+    }
+
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+
+    public SparseBooleanArray getSelectedIds() {
+        return mSelectedItemsIds;
+    }
+
 
     /**
      * @author wyrmise

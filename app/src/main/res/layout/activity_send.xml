@@ -3,11 +3,7 @@
     android:id="@+id/sendLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wyrmise.melriss.SendActivity" >
-
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+    tools:context="com.wyrmise.melriss.SendActivity">
 
     <ImageButton
         android:id="@+id/sendBtn"
@@ -57,7 +53,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5sp"
         android:layout_marginTop="10sp"
-        android:layout_below="@id/toolbar"
         android:ellipsize="end"
         android:hint="@string/phone_hint"
         android:inputType="phone"

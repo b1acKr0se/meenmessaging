@@ -41,6 +41,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -76,7 +78,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import me.drakeet.materialdialog.MaterialDialog;
-
 
 public class MainActivity extends ActionBarActivity implements
         AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
@@ -698,6 +699,8 @@ public class MainActivity extends ActionBarActivity implements
         });
 
         messageList.setOnItemClickListener(this);
+        messageList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
         if (mListState != null)
             messageList.onRestoreInstanceState(mListState);
         mListState = null;
@@ -712,7 +715,50 @@ public class MainActivity extends ActionBarActivity implements
         messageListAdapter = new MessageAdapter(this,
                 R.layout.list_view_main, recordsStored);
         messageList.setAdapter(messageListAdapter);
-    }
+
+        messageList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode,
+                                                  int position, long id, boolean checked) {
+                // Capture total checked items
+                final int checkedCount = messageList.getCheckedItemCount();
+                // Set the CAB title according to total checked items
+                mode.setTitle(checkedCount + " Selected");
+                // Calls toggleSelection method from ListViewAdapter Class
+                messageListAdapter.toggleSelection(position);
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.activity_main, menu);
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                toolbar.setVisibility(Toolbar.VISIBLE);
+                messageListAdapter.removeSelection();
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                toolbar.setVisibility(Toolbar.GONE);
+                return false;
+            }
+        });
+
+        }
 
     /**
      * @effects starts a thread to fetch the message if there is no data in the
@@ -888,10 +934,9 @@ public class MainActivity extends ActionBarActivity implements
                 .setContentText(message.messageContent)
                 .setAutoCancel(true)
                 .setSound(soundUri);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.icon_launcher);
-        mBuilder.setLargeIcon(largeIcon);
         Intent resultIntent = new Intent(this, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
+        resultIntent.putExtra("originalAddress",message.originalAddress);
         if (MessageAdapter.randomID.containsKey(message.messageNumber)) {
             resultIntent.putExtra("Color", MessageAdapter.randomID.get(message.messageNumber));
         }

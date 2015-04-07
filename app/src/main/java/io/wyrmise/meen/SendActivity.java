@@ -7,11 +7,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,12 +26,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hannesdorfmann.swipeback.Position;
+import com.hannesdorfmann.swipeback.SwipeBack;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class SendActivity extends ActionBarActivity {
-    private Toolbar toolbar;
     ImageButton sendBtn;
     EditText phone_edt, msg_edt;
     String SENT = "SMS_SENT";
@@ -46,47 +49,6 @@ public class SendActivity extends ActionBarActivity {
             unregisterReceiver(deliveryBroadcastReceiver);
             sendBroadcastReceiver = null;
             deliveryBroadcastReceiver = null;
-        }
-    }
-
-    private void onToolbarColorChanged(){
-        switch (MainActivity.colorCode){
-            case 1:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-                break;
-            case 2:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.light_green));
-                break;
-            case 3:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.lime));
-                break;
-            case 4:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.light_blue));
-                break;
-            case 5:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.cyan));
-                break;
-            case 6:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.teal));
-                break;
-            case 7:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
-                break;
-            case 8:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.orange));
-                break;
-            case 9:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.amber));
-                break;
-            case 10:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
-                break;
-            case 11:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
-                break;
-            case 12:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.brown));
-                break;
         }
     }
 
@@ -154,15 +116,12 @@ public class SendActivity extends ActionBarActivity {
             getActionBarColor();
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_send);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if(MainActivity.isNightMode){
-            toolbar.setBackgroundColor(getResources().getColor(R.color.night));
-        } else {
-            onToolbarColorChanged();
-        }
-        setSupportActionBar(toolbar);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean key = pref.getBoolean(SettingsActivity.KEY_SWIPE_BACK, true);
+        if (key)
+            SwipeBack.attach(this, Position.LEFT).setContentView(R.layout.activity_send).setSwipeBackView(R.layout.swipeback_default);
+        else
+            setContentView(R.layout.activity_send);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         sendBtn = (ImageButton) findViewById(R.id.sendBtn);
@@ -214,40 +173,40 @@ public class SendActivity extends ActionBarActivity {
     public void getActionBarColor(){
         switch(MainActivity.colorCode){
             case 1:
-                setTheme(R.style.Green);
+                setTheme(R.style.GreenActionBar);
                 break;
             case 2:
-                setTheme(R.style.LightGreen);
+                setTheme(R.style.LightGreenActionBar);
                 break;
             case 3:
-                setTheme(R.style.Lime);
+                setTheme(R.style.LimeActionBar);
                 break;
             case 4:
-                setTheme(R.style.Blue);
+                setTheme(R.style.BlueActionBar);
                 break;
             case 5:
-                setTheme(R.style.Cyan);
+                setTheme(R.style.CyanActionBar);
                 break;
             case 6:
-                setTheme(R.style.Teal);
+                setTheme(R.style.TealActionBar);
                 break;
             case 7:
-                setTheme(R.style.Red);
+                setTheme(R.style.RedActionBar);
                 break;
             case 8:
-                setTheme(R.style.Orange);
+                setTheme(R.style.OrangeActionBar);
                 break;
             case 9:
-                setTheme(R.style.Amber);
+                setTheme(R.style.AmberActionBar);
                 break;
             case 10:
-                setTheme(R.style.Purple);
+                setTheme(R.style.PurpleActionBar);
                 break;
             case 11:
-                setTheme(R.style.Pink);
+                setTheme(R.style.PinkActionBar);
                 break;
             case 12:
-                setTheme(R.style.Brown);
+                setTheme(R.style.BrownActionBar);
                 break;
         }
     }

@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -48,8 +47,6 @@ import java.util.Locale;
 
 public class ThreadActivity extends ActionBarActivity implements
         OnItemClickListener {
-
-    private Toolbar toolbar;
 
     ImageView sendBtn;
     EditText msg_edit;
@@ -102,16 +99,16 @@ public class ThreadActivity extends ActionBarActivity implements
         } else {
             switch (color) {
                 case -1:
-                    this.setTheme(R.style.AppTheme);
+                    this.setTheme(R.style.OrangeActionBar);
                     break;
                 case 0:
-                    this.setTheme(R.style.Green);
+                    this.setTheme(R.style.GreenActionBar);
                     break;
                 case 1:
-                    this.setTheme(R.style.Blue);
+                    this.setTheme(R.style.BlueActionBar);
                     break;
                 case 2:
-                    this.setTheme(R.style.Orange);
+                    this.setTheme(R.style.OrangeActionBar);
                     break;
             }
         }
@@ -123,24 +120,6 @@ public class ThreadActivity extends ActionBarActivity implements
             SwipeBack.attach(this, Position.LEFT).setContentView(R.layout.activity_thread).setSwipeBackView(R.layout.swipeback_default);
         else
             setContentView(R.layout.activity_thread);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (MainActivity.isNightMode) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.night));
-        } else {
-            switch (color) {
-                case 0:
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.green));
-                    break;
-                case 1:
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.light_blue));
-                    break;
-                case 2:
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.deep_orange));
-                    break;
-            }
-        }
-        setSupportActionBar(toolbar);
 
         msg_edit = (EditText) findViewById(R.id.edit_msg);
         getBackgroundPicture();
