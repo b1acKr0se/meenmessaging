@@ -25,8 +25,8 @@
     <string name="background_sum">Select the global background for the application</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_exception">Exception Handler</string>
-    <string name="action_bar_title">Toolbar color</string>
-    <string name="action_bar_summary">Change the color of the header</string>
+    <string name="action_bar_title">Theme</string>
+    <string name="action_bar_summary">Change the theme of the application</string>
     <string name="fab_title">Floating button</string>
     <string name="fab_summary">Change the color of the floating action button</string>
     <string name="title_activity_dialog">DialogActivity</string>

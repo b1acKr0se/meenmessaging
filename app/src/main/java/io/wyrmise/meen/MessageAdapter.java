@@ -2,7 +2,6 @@ package io.wyrmise.meen;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -18,9 +17,7 @@ import android.widget.TextView;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 /**
  * @author wyrmise
@@ -28,8 +25,6 @@ import java.util.Random;
  * @attributes ctx Context messageListArray ArrayList<Message>
  */
 public class MessageAdapter extends ArrayAdapter<Message> {
-    static HashMap<String, Integer> avatarID = new HashMap<String, Integer>();
-    static HashMap<String, Integer> randomID = new HashMap<String, Integer>();
     public ArrayList<Message> messageListArray;
     Holder holder;
     private Context ctx;
@@ -86,23 +81,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         } else {
             holder = (Holder) convertView1.getTag();
         }
-
-        SharedPreferences.Editor editor = ctx.getSharedPreferences("colors", ctx.MODE_PRIVATE).edit();
         Message message = getItem(position);
         if (!MainActivity.contactPictureID.containsKey(message.messageNumber)) {
-            if (!avatarID.containsKey(message.messageNumber)) {
-                ArrayList<Integer> a = getPicture(message);
-                int id = a.get(1);
-                if (id != 0) {
-                    holder.imgView.setImageResource(id);
-                    avatarID.put(message.messageNumber, id);
-                    randomID.put(message.messageNumber, a.get(0));
-                    editor.putInt(message.messageNumber, a.get(0));
-                }
-            } else {
-                int id = avatarID.get(message.messageNumber);
-                holder.imgView.setImageResource(id);
-            }
+            holder.imgView.setImageResource(getDisplayPicture(message));
         } else
             holder.imgView.setImageDrawable(MainActivity.contactPictureID.get(message.messageNumber));
 
@@ -141,7 +122,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 holder.date.setTextColor(convertView1.getResources().getColor(R.color.gray));
             }
         }
-        editor.commit();
         return convertView1;
     }
 
@@ -199,33 +179,25 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         return null;
     }
 
-    public ArrayList<Integer> getPicture(Message msg) {
+    public int getDisplayPicture(Message msg) {
         if (!msg.messageNumber.substring(0, 1).matches("[0-9]")
                 && !msg.messageNumber.startsWith("+")) {
-            Random rand = new Random();
-            int random = rand.nextInt(3);
+            int color = MainActivity.colorCode;
             String first = msg.messageNumber.substring(0, 1)
                     .toLowerCase();
             if (first.equals("đ"))
                 first = "d";
             String firstLetter = removeDiacriticalMarks(first);
-            String fileName = "letters_" + firstLetter + "_" + random;
+            String fileName = "letters_" + firstLetter + "_" + color;
             int id = ctx.getResources().getIdentifier(fileName, "drawable",
                     ctx.getPackageName());
-            ArrayList<Integer> a = new ArrayList<Integer>();
-            a.add(random);
-            a.add(id);
-            return a;
+            return id;
         } else {
-            Random rand = new Random();
-            int random = rand.nextInt(3);
-            String fileName = "default_" + random;
+            int color = MainActivity.colorCode;
+            String fileName = "default_" + color;
             int id = ctx.getResources().getIdentifier(fileName, "drawable",
                     ctx.getPackageName());
-            ArrayList<Integer> a = new ArrayList<Integer>();
-            a.add(random);
-            a.add(id);
-            return a;
+            return id;
         }
     }
 

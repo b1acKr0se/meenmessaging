@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements
             //the toolbar color
             else if(key.equals(SettingsActivity.KEY_PREF_ACTION_BAR)){
                 onActionBarColorChanged(prefs);
-                Toast.makeText(getBaseContext(), "Action bar color changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Theme changed", Toast.LENGTH_SHORT).show();
             }
             //the floating action button color
             else if(key.equals(SettingsActivity.KEY_FAB_THEME)){
@@ -131,7 +131,7 @@ public class MainActivity extends ActionBarActivity implements
     public static boolean refreshOnDataChanged = false;
     static MainActivity instance; //the current instance of the Activity
     static HashMap<String, String> contacts; //array of contacts that is used accross the app
-    static boolean hasBackground = true; // black or white background
+    static boolean hasBackground = false; // black or white background
     static int colorCode = -1; //initial value of toolbar's color
     static HashMap<String, Drawable> contactPictureID = new HashMap<String, Drawable>();
     static HashMap<String,ArrayList<Message>> cacheThread = new HashMap<String,ArrayList<Message>>();
@@ -143,7 +143,7 @@ public class MainActivity extends ActionBarActivity implements
     ArrayList<Message> listInboxMessages; //
     FloatingActionButton fab; // floating action button
     ProgressWheel progressWheel; //loading spinner
-    NotificationManager mNotificationManager; //notification var
+    NotificationManager mNotificationManager;
     SharedPreferences prefs; //preference of the app
     SharedPreferences.Editor editor; //editor for said preference
     private Parcelable mListState = null;  //holds the current position of the listview
@@ -300,7 +300,7 @@ public class MainActivity extends ActionBarActivity implements
         String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
         int colorSelection = -1;
         if (getColor != null) colorSelection = Integer.parseInt(getColor);
-        Log.d("selection: ",""+colorSelection);
+        editor = getSharedPreferences("colors", MODE_PRIVATE).edit();
         switch (colorSelection) {
             case 1:
                 setTheme(R.style.Green);
@@ -313,9 +313,6 @@ public class MainActivity extends ActionBarActivity implements
                 recreate();
                 break;
             case 3:
-                setTheme(R.style.Lime);
-                colorCode = 3;
-                recreate();
                 break;
             case 4:
                 setTheme(R.style.Blue);
@@ -343,11 +340,7 @@ public class MainActivity extends ActionBarActivity implements
                 recreate();
                 break;
             case 9:
-                setTheme(R.style.Amber);
-                colorCode = 9;
-                recreate();
                 break;
-
             case 10:
                 setTheme(R.style.Purple);
                 colorCode = 10;
@@ -364,6 +357,8 @@ public class MainActivity extends ActionBarActivity implements
                 recreate();
                 break;
         }
+        editor.putInt("color",colorCode);
+        editor.commit();
     }
 
 
@@ -372,6 +367,7 @@ public class MainActivity extends ActionBarActivity implements
         String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
         int colorSelection = -1;
         if (getColor != null) colorSelection = Integer.parseInt(getColor);
+        editor = getSharedPreferences("colors", MODE_PRIVATE).edit();
         switch (colorSelection) {
             case 1:
                 setTheme(R.style.Green);
@@ -382,8 +378,6 @@ public class MainActivity extends ActionBarActivity implements
                 colorCode = 2;
                 break;
             case 3:
-                setTheme(R.style.Lime);
-                colorCode = 3;
                 break;
             case 4:
                 setTheme(R.style.Blue);
@@ -406,10 +400,7 @@ public class MainActivity extends ActionBarActivity implements
                 colorCode = 8;
                 break;
             case 9:
-                setTheme(R.style.Amber);
-                colorCode = 9;
                 break;
-
             case 10:
                 setTheme(R.style.Purple);
                 colorCode = 10;
@@ -423,6 +414,8 @@ public class MainActivity extends ActionBarActivity implements
                 colorCode = 12;
                 break;
         }
+        editor.putInt("color",colorCode);
+        editor.commit();
     }
 
 
@@ -781,7 +774,6 @@ public class MainActivity extends ActionBarActivity implements
     public HashMap<String, String> getContacts() {
         HashMap<String, String> getContacts = new HashMap<String, String>();
         editor = getSharedPreferences("contacts", MODE_PRIVATE).edit();
-
         Cursor managedCursor = getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 new String[] { ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER },
@@ -938,9 +930,6 @@ public class MainActivity extends ActionBarActivity implements
         Intent resultIntent = new Intent(this, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
         resultIntent.putExtra("originalAddress",message.originalAddress);
-        if (MessageAdapter.randomID.containsKey(message.messageNumber)) {
-            resultIntent.putExtra("Color", MessageAdapter.randomID.get(message.messageNumber));
-        }
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(ThreadActivity.class);
 
@@ -1007,9 +996,6 @@ public class MainActivity extends ActionBarActivity implements
                     Intent intent = new Intent(getBaseContext(), ThreadActivity.class);
                     String phone = message.messageNumber;
                     intent.putExtra("Phone", phone);
-                    if (MessageAdapter.randomID.containsKey(phone)) {
-                        intent.putExtra("Color", MessageAdapter.randomID.get(phone));
-                    }
                     startActivity(intent);
                 }
             });
@@ -1094,9 +1080,6 @@ public class MainActivity extends ActionBarActivity implements
         }
         intent.putExtra("Phone", phone);
         intent.putExtra("originalAddress",msg.originalAddress);
-        if (MessageAdapter.randomID.containsKey(phone)) {
-            intent.putExtra("Color", MessageAdapter.randomID.get(phone));
-        }
         startActivity(intent);
     }
 
@@ -1198,11 +1181,6 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         protected Boolean doInBackground(String... params) {
             fetchInboxMessages();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             return null;
         }
     }

@@ -111,7 +111,7 @@ public class SendActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(MainActivity.isNightMode){
-            setTheme(R.style.Night);
+            setTheme(R.style.NightActionBar);
         } else {
             getActionBarColor();
         }
@@ -172,6 +172,9 @@ public class SendActivity extends ActionBarActivity {
 
     public void getActionBarColor(){
         switch(MainActivity.colorCode){
+            case -1:
+                setTheme(R.style.DefaultTheme);
+                break;
             case 1:
                 setTheme(R.style.GreenActionBar);
                 break;
@@ -179,7 +182,6 @@ public class SendActivity extends ActionBarActivity {
                 setTheme(R.style.LightGreenActionBar);
                 break;
             case 3:
-                setTheme(R.style.LimeActionBar);
                 break;
             case 4:
                 setTheme(R.style.BlueActionBar);
@@ -197,7 +199,6 @@ public class SendActivity extends ActionBarActivity {
                 setTheme(R.style.OrangeActionBar);
                 break;
             case 9:
-                setTheme(R.style.AmberActionBar);
                 break;
             case 10:
                 setTheme(R.style.PurpleActionBar);
@@ -283,6 +284,9 @@ public class SendActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == android.R.id.home){
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.hannesdorfmann.swipeback.Position;
 import com.hannesdorfmann.swipeback.SwipeBack;
+import com.hannesdorfmann.swipeback.transformer.SlideSwipeBackTransformer;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.text.SimpleDateFormat;
@@ -93,22 +94,46 @@ public class ThreadActivity extends ActionBarActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        int color = intent.getIntExtra("Color", -1);
+        SharedPreferences colorPref = getSharedPreferences("colors", MODE_PRIVATE);
+        int color = colorPref.getInt("color",-1);
         if (MainActivity.isNightMode) {
-            setTheme(R.style.Night);
+            setTheme(R.style.NightActionBar);
         } else {
             switch (color) {
                 case -1:
-                    this.setTheme(R.style.OrangeActionBar);
-                    break;
-                case 0:
-                    this.setTheme(R.style.GreenActionBar);
+                    this.setTheme(R.style.DefaultTheme);
                     break;
                 case 1:
-                    this.setTheme(R.style.BlueActionBar);
+                    this.setTheme(R.style.GreenActionBar);
                     break;
                 case 2:
-                    this.setTheme(R.style.OrangeActionBar);
+                    this.setTheme(R.style.LightGreenActionBar);
+                    break;
+                case 4:
+                    setTheme(R.style.BlueActionBar);
+                    break;
+                case 5:
+                    setTheme(R.style.CyanActionBar);
+                    break;
+                case 6:
+                    setTheme(R.style.TealActionBar);
+                    break;
+                case 7:
+                    setTheme(R.style.RedActionBar);
+                    break;
+                case 8:
+                    setTheme(R.style.OrangeActionBar);
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    setTheme(R.style.PurpleActionBar);
+                    break;
+                case 11:
+                    setTheme(R.style.PinkActionBar);
+                    break;
+                case 12:
+                    setTheme(R.style.BrownActionBar);
                     break;
             }
         }
@@ -117,7 +142,11 @@ public class ThreadActivity extends ActionBarActivity implements
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         boolean key = pref.getBoolean(SettingsActivity.KEY_SWIPE_BACK, true);
         if (key)
-            SwipeBack.attach(this, Position.LEFT).setContentView(R.layout.activity_thread).setSwipeBackView(R.layout.swipeback_default);
+            SwipeBack.attach(this, Position.LEFT)
+                     .setDrawOverlay(true)
+                     .setSwipeBackTransformer(new SlideSwipeBackTransformer())
+                     .setContentView(R.layout.activity_thread)
+                     .setSwipeBackView(R.layout.swipeback_default);
         else
             setContentView(R.layout.activity_thread);
 

@@ -142,8 +142,6 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         Intent resultIntent = new Intent(context, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
         resultIntent.putExtra("originalAddress", message.originalAddress);
-        if(colorPrefs.getInt(message.messageNumber,-1)!=-1)
-            resultIntent.putExtra("Color",colorPrefs.getInt(message.messageNumber,-1));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(ThreadActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack

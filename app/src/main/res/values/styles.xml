@@ -21,6 +21,21 @@
 
     </style>
 
+    <style name="DefaultTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/deep_orange</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/dark_deep_orange</item>
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/deep_orange</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="actionModeBackground">@color/deep_orange</item>
+        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+
+    </style>
+
     <style name="Textured" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="colorPrimaryDark">@color/dark_green</item>
@@ -181,26 +196,6 @@
         <item name="colorAccent">@color/light_green</item>
     </style>
 
-    <style name="Lime" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/lime</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/dark_lime</item>
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/lime</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="LimeActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/lime</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/dark_lime</item>
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/lime</item>
-    </style>
 
     <style name="Cyan" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
@@ -244,26 +239,6 @@
         <item name="colorAccent">@color/teal</item>
     </style>
 
-    <style name="Amber" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/amber</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/dark_amber</item>
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/amber</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="AmberActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/amber</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/dark_amber</item>
-        <!-- colorAccent is used as the default value for colorControlActivated
-             which is used to tint widgets -->
-        <item name="colorAccent">@color/amber</item>
-    </style>
 
     <style name="Brown" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- colorPrimary is used for the default action bar background -->
