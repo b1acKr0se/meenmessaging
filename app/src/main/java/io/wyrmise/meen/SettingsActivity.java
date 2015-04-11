@@ -39,9 +39,6 @@ public class SettingsActivity extends ActionBarActivity
 
     public void getActionBarColor(){
         switch(MainActivity.colorCode){
-            case -1:
-                setTheme(R.style.DefaultTheme);
-                break;
             case 1:
                 setTheme(R.style.GreenActionBar);
                 break;

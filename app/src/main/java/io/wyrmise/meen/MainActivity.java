@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements
     static MainActivity instance; //the current instance of the Activity
     static HashMap<String, String> contacts; //array of contacts that is used accross the app
     static boolean hasBackground = false; // black or white background
-    static int colorCode = -1; //initial value of toolbar's color
+    static int colorCode = 1; //initial value of toolbar's color
     static HashMap<String, Drawable> contactPictureID = new HashMap<String, Drawable>();
     static HashMap<String,ArrayList<Message>> cacheThread = new HashMap<String,ArrayList<Message>>();
     final String SENT = "SMS_SENT";
@@ -470,9 +470,6 @@ public class MainActivity extends ActionBarActivity implements
             case 2:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.light_green));
                 break;
-            case 3:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.lime));
-                break;
             case 4:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.light_blue));
                 break;
@@ -487,9 +484,6 @@ public class MainActivity extends ActionBarActivity implements
                 break;
             case 8:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.orange));
-                break;
-            case 9:
-                toolbar.setBackgroundColor(getResources().getColor(R.color.amber));
                 break;
             case 10:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
@@ -701,6 +695,7 @@ public class MainActivity extends ActionBarActivity implements
             messageList.onRestoreInstanceState(mListState);
         mListState = null;
         new Task().execute();
+
     }
 
     /**
@@ -1175,6 +1170,7 @@ public class MainActivity extends ActionBarActivity implements
                 noMessage.setVisibility(TextView.VISIBLE);
                 fab.setVisibility(FloatingActionButton.VISIBLE);
             }
+
             super.onPostExecute(result);
         }
 
@@ -1216,8 +1212,7 @@ public class MainActivity extends ActionBarActivity implements
             return null;
         }
         if (photoUri != null) {
-            InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(
-                    cr, photoUri);
+            InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, photoUri,true);
             if (input != null) {
                 return BitmapFactory.decodeStream(input);
             }

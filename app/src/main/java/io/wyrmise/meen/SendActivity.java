@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +41,7 @@ public class SendActivity extends ActionBarActivity {
     String DELIVERED = "SMS_DELIVERED";
     private BroadcastReceiver sendBroadcastReceiver;
     private BroadcastReceiver deliveryBroadcastReceiver;
+    private Toolbar toolbar;
 
     @Override
     protected void onPause() {
@@ -122,6 +124,7 @@ public class SendActivity extends ActionBarActivity {
             SwipeBack.attach(this, Position.LEFT).setContentView(R.layout.activity_send).setSwipeBackView(R.layout.swipeback_default);
         else
             setContentView(R.layout.activity_send);
+        initNavigationDrawer();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         sendBtn = (ImageButton) findViewById(R.id.sendBtn);
@@ -171,43 +174,40 @@ public class SendActivity extends ActionBarActivity {
     }
 
     public void getActionBarColor(){
-        switch(MainActivity.colorCode){
-            case -1:
-                setTheme(R.style.DefaultTheme);
-                break;
+        SharedPreferences colorPref = getSharedPreferences("colors", MODE_PRIVATE);
+        int color = colorPref.getInt("color",-1);
+        switch(color){
             case 1:
-                setTheme(R.style.GreenActionBar);
+                setTheme(R.style.Green);
                 break;
             case 2:
-                setTheme(R.style.LightGreenActionBar);
+                setTheme(R.style.LightGreen);
                 break;
             case 3:
                 break;
             case 4:
-                setTheme(R.style.BlueActionBar);
+                setTheme(R.style.Blue);
                 break;
             case 5:
-                setTheme(R.style.CyanActionBar);
+                setTheme(R.style.Cyan);
                 break;
             case 6:
-                setTheme(R.style.TealActionBar);
+                setTheme(R.style.Teal);
                 break;
             case 7:
-                setTheme(R.style.RedActionBar);
+                setTheme(R.style.Red);
                 break;
             case 8:
-                setTheme(R.style.OrangeActionBar);
-                break;
-            case 9:
+                setTheme(R.style.Orange);
                 break;
             case 10:
-                setTheme(R.style.PurpleActionBar);
+                setTheme(R.style.Purple);
                 break;
             case 11:
-                setTheme(R.style.PinkActionBar);
+                setTheme(R.style.Pink);
                 break;
             case 12:
-                setTheme(R.style.BrownActionBar);
+                setTheme(R.style.Brown);
                 break;
         }
     }
@@ -290,5 +290,48 @@ public class SendActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initNavigationDrawer() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        onToolbarColorChanged();
+        setSupportActionBar(toolbar);
+    }
+
+    private void onToolbarColorChanged(){
+        SharedPreferences colorPref = getSharedPreferences("colors", MODE_PRIVATE);
+        int color = colorPref.getInt("color",-1);
+        switch (color){
+            case 1:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.green));
+                break;
+            case 2:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.light_green));
+                break;
+            case 4:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.light_blue));
+                break;
+            case 5:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.cyan));
+                break;
+            case 6:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.teal));
+                break;
+            case 7:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red));
+                break;
+            case 8:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.orange));
+                break;
+            case 10:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.purple));
+                break;
+            case 11:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.pink));
+                break;
+            case 12:
+                toolbar.setBackgroundColor(getResources().getColor(R.color.brown));
+                break;
+        }
     }
 }
