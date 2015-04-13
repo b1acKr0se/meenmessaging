@@ -83,6 +83,26 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
+    public static void markSmsAsDelivered(Context context, final String from, final String body) {
+        Uri uri = Uri.parse("content://sms/");
+        Cursor cursor = context.getContentResolver().query(uri, null, "type=2", null, null);
+        try{
+            while (cursor.moveToNext()) {
+                if ((cursor.getString(cursor.getColumnIndex("address")).equals(from))) {
+                    if (cursor.getString(cursor.getColumnIndex("body")).startsWith(body)) {
+                        String SmsMessageId = cursor.getString(cursor.getColumnIndex("_id"));
+                        ContentValues values = new ContentValues();
+                        values.put("status", 0);
+                        context.getContentResolver().update(Uri.parse("content://sms/"), values, "_id=" + SmsMessageId, null);
+                        return;
+                    }
+                }
+            }
+        }catch(Exception e)
+        {
+        }
+    }
+
     public void onReceive(Context context, Intent intent) {
         Bundle intentExtras = intent.getExtras();
         if (intentExtras != null) {
@@ -110,7 +130,7 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             }
             else {
                 MainActivity inst = MainActivity.instance();
-                inst.pushNotification(msg);
+                pushNotification(context,msg);
                 inst.updateList(msg);
             }
         }
@@ -121,13 +141,13 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
                 context);
         Uri soundUri = RingtoneManager
                 .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String address = message.messageNumber;
         String number = message.messageNumber.replace(" ", "").replace("-", "");
         if (number.startsWith("+84")) {
             number = number.substring(3);
             number = "0" + number;
         }
         SharedPreferences contactPrefs = context.getSharedPreferences("contacts", context.MODE_PRIVATE);
-        SharedPreferences colorPrefs = context.getSharedPreferences("colors", context.MODE_PRIVATE);
         if(contactPrefs.getString(number, null)!=null)
             message.messageNumber = contactPrefs.getString(number, null);
         Toast.makeText(context, "SMS from " + message.messageNumber,
@@ -138,10 +158,9 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         mBuilder.setContentText(message.messageContent);
         mBuilder.setAutoCancel(true);
         mBuilder.setSound(soundUri);
-
         Intent resultIntent = new Intent(context, ThreadActivity.class);
         resultIntent.putExtra("Phone", message.messageNumber);
-        resultIntent.putExtra("originalAddress", message.originalAddress);
+        resultIntent.putExtra("originalAddress", address);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(ThreadActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack

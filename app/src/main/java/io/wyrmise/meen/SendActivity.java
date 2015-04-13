@@ -1,12 +1,8 @@
 package io.wyrmise.meen;
 
-import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -25,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hannesdorfmann.swipeback.Position;
 import com.hannesdorfmann.swipeback.SwipeBack;
@@ -39,19 +34,11 @@ public class SendActivity extends ActionBarActivity {
     EditText phone_edt, msg_edt;
     String SENT = "SMS_SENT";
     String DELIVERED = "SMS_DELIVERED";
-    private BroadcastReceiver sendBroadcastReceiver;
-    private BroadcastReceiver deliveryBroadcastReceiver;
     private Toolbar toolbar;
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(sendBroadcastReceiver!=null && deliveryBroadcastReceiver!=null) {
-            unregisterReceiver(sendBroadcastReceiver);
-            unregisterReceiver(deliveryBroadcastReceiver);
-            sendBroadcastReceiver = null;
-            deliveryBroadcastReceiver = null;
-        }
     }
 
     @Override
@@ -62,52 +49,6 @@ public class SendActivity extends ActionBarActivity {
                 sendBtn.setVisibility(Button.INVISIBLE);
             }
         }
-        sendBroadcastReceiver = new BroadcastReceiver() {
-
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS Sent",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(getBaseContext(), "Generic failure",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(getBaseContext(), "No service",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(getBaseContext(), "Null PDU",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(getBaseContext(), "Radio off",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        };
-
-        deliveryBroadcastReceiver = new BroadcastReceiver() {
-            public void onReceive(Context arg0, Intent arg1) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS Delivered",
-                                Toast.LENGTH_SHORT).show();
-
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS not delivered",
-                                Toast.LENGTH_SHORT).show();
-
-                        break;
-                }
-            }
-        };
-        registerReceiver(deliveryBroadcastReceiver, new IntentFilter(DELIVERED));
-        registerReceiver(sendBroadcastReceiver, new IntentFilter(SENT));
     }
 
     @Override
@@ -241,10 +182,22 @@ public class SendActivity extends ActionBarActivity {
         String phone_num = phone_edt.getText().toString();
         String msg = msg_edt.getText().toString();
         try {
+            Message message = new Message();
+            message.messageNumber=phone_num;
+            message.originalAddress=phone_num;
+            message.messageContent=msg;
+            SimpleDateFormat hours = new SimpleDateFormat("h:mm a",
+                    Locale.US);
+            message.messageDate=hours.format(new Date());
+
+            Intent deliveredIntent = new Intent(DELIVERED);
+            deliveredIntent.putExtra("Phone",message.originalAddress);
+            deliveredIntent.putExtra("Message",message.messageContent);
+
             PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
                     new Intent(SENT), 0);
             PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
-                    new Intent(DELIVERED), 0);
+                    deliveredIntent, 0);
 
             SmsManager smsMan = SmsManager.getDefault();
             smsMan.sendTextMessage(phone_num, null, msg, sentPI, deliveredPI);
@@ -257,17 +210,8 @@ public class SendActivity extends ActionBarActivity {
             values.put("body",msg);
             Uri uri = Uri.parse("content://sms/");
             getContentResolver().insert(uri,values);
-
-            Message message = new Message();
-            message.messageNumber=phone_num;
-            message.messageContent=msg;
-            SimpleDateFormat hours = new SimpleDateFormat("h:mm a",
-                    Locale.US);
-            message.messageDate=hours.format(new Date());
-
-            MainActivity instance = MainActivity.instance();
-            instance.updateList(message);
-
+            MainActivity.instance().updateList(message);
+            finish();
         } catch(Exception e) {
         }
     }

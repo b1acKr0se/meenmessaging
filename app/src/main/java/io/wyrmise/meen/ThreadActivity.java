@@ -37,11 +37,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.hannesdorfmann.swipeback.Position;
 import com.hannesdorfmann.swipeback.SwipeBack;
 import com.pnikosis.materialishprogress.ProgressWheel;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -98,45 +96,45 @@ public class ThreadActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         SharedPreferences colorPref = getSharedPreferences("colors", MODE_PRIVATE);
-        int color = colorPref.getInt("color",-1);
+        int color = colorPref.getInt("color", -1);
         String phone_num = intent.getStringExtra("originalAddress");
-            if (MainActivity.isNightMode) {
-                setTheme(R.style.Night);
-            } else {
-                switch (color) {
-                    case 1:
-                        setTheme(R.style.Green);
-                        break;
-                    case 2:
-                        setTheme(R.style.LightGreen);
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        setTheme(R.style.Blue);
-                        break;
-                    case 5:
-                        setTheme(R.style.Cyan);
-                        break;
-                    case 6:
-                        setTheme(R.style.Teal);
-                        break;
-                    case 7:
-                        setTheme(R.style.Red);
-                        break;
-                    case 8:
-                        setTheme(R.style.Orange);
-                        break;
-                    case 10:
-                        setTheme(R.style.Purple);
-                        break;
-                    case 11:
-                        setTheme(R.style.Pink);
-                        break;
-                    case 12:
-                        setTheme(R.style.Brown);
-                        break;
-                }
+        if (MainActivity.isNightMode) {
+            setTheme(R.style.Night);
+        } else {
+            switch (color) {
+                case 1:
+                    setTheme(R.style.Green);
+                    break;
+                case 2:
+                    setTheme(R.style.LightGreen);
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    setTheme(R.style.Blue);
+                    break;
+                case 5:
+                    setTheme(R.style.Cyan);
+                    break;
+                case 6:
+                    setTheme(R.style.Teal);
+                    break;
+                case 7:
+                    setTheme(R.style.Red);
+                    break;
+                case 8:
+                    setTheme(R.style.Orange);
+                    break;
+                case 10:
+                    setTheme(R.style.Purple);
+                    break;
+                case 11:
+                    setTheme(R.style.Pink);
+                    break;
+                case 12:
+                    setTheme(R.style.Brown);
+                    break;
+            }
 
         }
         super.onCreate(savedInstanceState);
@@ -145,25 +143,24 @@ public class ThreadActivity extends ActionBarActivity implements
         boolean key = pref.getBoolean(SettingsActivity.KEY_SWIPE_BACK, true);
         if (key)
             SwipeBack.attach(this, Position.LEFT)
-                     .setContentView(R.layout.activity_thread)
-                     .setSwipeBackView(R.layout.swipeback_default);
+                    .setContentView(R.layout.activity_thread)
+                    .setSwipeBackView(R.layout.swipeback_default);
         else
             setContentView(R.layout.activity_thread);
 
         initNavigationDrawer();
-        Bitmap bmp = MainActivity.getPhoto(this,phone_num);
-        if(bmp!=null) {
+        Bitmap bmp = MainActivity.getPhoto(this, phone_num);
+        if (bmp != null && bmp.getHeight()>=500 && bmp.getWidth()>=500) {
             TypedValue tv = new TypedValue();
             int height = 0;
-            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-            {
-                height = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
             }
             Bitmap dstBmp;
-            if (bmp.getWidth() >= bmp.getHeight() && bmp.getHeight()/2 > height){
-                dstBmp = Bitmap.createBitmap(bmp, 0,bmp.getHeight()/2, bmp.getWidth(),height);
+            if (bmp.getWidth() >= bmp.getHeight() && bmp.getHeight() / 2 > height) {
+                dstBmp = Bitmap.createBitmap(bmp, 0, bmp.getHeight() / 3, bmp.getWidth(), height);
             } else {
-                dstBmp = Bitmap.createBitmap(bmp, 0,bmp.getHeight()/2,  bmp.getWidth(),bmp.getHeight()/4);
+                dstBmp = Bitmap.createBitmap(bmp, 0, bmp.getHeight() / 3, bmp.getWidth(), bmp.getHeight() / 4);
             }
             BitmapDrawable background = new BitmapDrawable(getResources(), dstBmp);
             getSupportActionBar().setBackgroundDrawable(background);
@@ -201,7 +198,6 @@ public class ThreadActivity extends ActionBarActivity implements
             public void onClick(View v) {
                 if (msg_edit.getText().length() == 0) {
                     Toast.makeText(getApplicationContext(), "You must enter the message!", Toast.LENGTH_LONG).show();
-                    Log.d("No char", "edt");
                 } else {
                     if (getMode) {
                         delaySendProgressWheel.setProgress(0);
@@ -252,19 +248,7 @@ public class ThreadActivity extends ActionBarActivity implements
         });
         listView = (ListView) findViewById(R.id.thread_view);
         listView.setOnItemClickListener(this);
-
-        if (!MainActivity.cacheThread.containsKey(phoneNum)) {
-            new getThreadMessageTask().execute();
-        } else {
-            this.message = MainActivity.cacheThread.get(phoneNum);
-            msgAdapter = new ThreadAdapter(this, R.layout.list_view_thread, message);
-            msgAdapter.setArrayList(this.message);
-            if (message.size() == 1)
-                getSupportActionBar().setSubtitle(message.size() + " message");
-            else
-                getSupportActionBar().setSubtitle(message.size() + " messages");
-            listView.setAdapter(msgAdapter);
-        }
+        new getThreadMessageTask().execute();
     }
 
     private void initNavigationDrawer() {
@@ -273,10 +257,10 @@ public class ThreadActivity extends ActionBarActivity implements
         setSupportActionBar(toolbar);
     }
 
-    private void onToolbarColorChanged(){
+    private void onToolbarColorChanged() {
         SharedPreferences colorPref = getSharedPreferences("colors", MODE_PRIVATE);
-        int color = colorPref.getInt("color",-1);
-        switch (color){
+        int color = colorPref.getInt("color", -1);
+        switch (color) {
             case 1:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
                 break;
@@ -313,7 +297,6 @@ public class ThreadActivity extends ActionBarActivity implements
     public void populateThread() {
         msgAdapter = new ThreadAdapter(this, R.layout.list_view_thread, message);
         msgAdapter.setArrayList(this.message);
-        MainActivity.cacheThread.put(phoneNum, this.message);
         listView.setAdapter(msgAdapter);
     }
 
@@ -337,13 +320,13 @@ public class ThreadActivity extends ActionBarActivity implements
         Intent intent = getIntent();
         phoneNum = intent.getStringExtra("Phone");
         String actualPhone = intent.getStringExtra("originalAddress");
+        Log.d("Actual Phone: ",""+actualPhone);
         Uri uriSms = Uri.parse("content://sms/");
         Cursor cursor = this.getContentResolver()
                 .query(uriSms,
                         new String[]{"_id", "address", "date", "body",
-                                "type", "read"}, "address='" + actualPhone + "' OR address='" + actualPhone.replace(" ", "") + "'", null,
+                                "type", "read","status"}, "address='" + actualPhone + "' OR address='" + actualPhone.replace(" ", "") + "'", null,
                         "date" + " asc");
-        System.out.println("Actual phone: " + actualPhone);
         if (cursor != null) {
             cursor.moveToFirst();
             if (cursor.getCount() > 0) {
@@ -358,11 +341,13 @@ public class ThreadActivity extends ActionBarActivity implements
                     long milliSeconds = cursor.getLong(cursor
                             .getColumnIndex("date"));
                     message.readState = cursor.getInt(cursor.getColumnIndex("read"));
-                    SimpleDateFormat initFormat = new SimpleDateFormat("MMM dd", Locale.US);
-                    SimpleDateFormat hours = new SimpleDateFormat("h:mm a", Locale.US);
+
+                    message.deliveryStatus = cursor.getInt(cursor.getColumnIndex("status"));
+                    Log.d("Delivery: ", ""+message.deliveryStatus);
+                    SimpleDateFormat initFormat = new SimpleDateFormat("hh:mm dd/MM", Locale.US);
+                    SimpleDateFormat hours = new SimpleDateFormat("hh:mm", Locale.US);
 
                     Calendar calendar = Calendar.getInstance();
-
                     calendar.setTimeInMillis(milliSeconds);
 
                     String finalDateString = initFormat.format(calendar.getTime());
@@ -376,27 +361,15 @@ public class ThreadActivity extends ActionBarActivity implements
                         finalDateString = initFormat.format(calendar.getTime());
                         message.messageDate = finalDateString;
                     }
-                    String number = message.messageNumber.replace(" ", "")
-                            .replace("-", "");
-                    if (number.startsWith("+")) {
-                        number = number.substring(3);
-                        number = "0" + number;
-                    }
-                    if (contacts.containsKey(number)) {
-                        message.messageNumber = contacts.get(number);
-                    }
-                    if (message.messageNumber.equals(phoneNum)) {
+                    if (message.readState == 0) {
                         message.readState = 1;
                         NewSmsBroadcastReceiver.markSmsAsRead(this, message.originalAddress, message.messageContent);
-                        String type = cursor.getString(cursor
-                                .getColumnIndex("type"));
-                        int checkType = Integer.parseInt(type);
-                        if (checkType == 2)
-                            message.messageNumber = "Me";
-                        this.message.add(message);
-                    } else {
-                        System.out.println("not equal : " + message.messageNumber + " " + phoneNum);
                     }
+                    String type = cursor.getString(cursor.getColumnIndex("type"));
+                    int checkType = Integer.parseInt(type);
+                    if (checkType == 2)
+                        message.messageNumber = "Me";
+                    this.message.add(message);
                 } while (cursor.moveToNext());
                 cursor.close();
 
@@ -419,6 +392,7 @@ public class ThreadActivity extends ActionBarActivity implements
             try {
                 Message message = new Message();
                 message.messageNumber = "Me";
+                message.originalAddress = phoneNumber;
                 message.readState = 1;
                 message.messageContent = msg;
                 Long date = System.currentTimeMillis();
@@ -465,10 +439,13 @@ public class ThreadActivity extends ActionBarActivity implements
 
         String phoneNumber = getPhoneNumber(phoneNum, this);
         try {
+            Intent deliveredIntent = new Intent(DELIVERED);
+            deliveredIntent.putExtra("Phone",message.originalAddress);
+            deliveredIntent.putExtra("Message",message.messageContent);
             PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
                     new Intent(SENT), 0);
             PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
-                    new Intent(DELIVERED), 0);
+                    deliveredIntent, 0);
 
             SmsManager smsMan = SmsManager.getDefault();
             smsMan.sendTextMessage(phoneNumber, null, msg, sentPI, deliveredPI);

@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import android.util.Log;
 import java.util.ArrayList;
 
 /**
@@ -54,87 +55,109 @@ public class ThreadAdapter extends ArrayAdapter<Message> {
             holder.messageContent = (TextView) convertView1
                     .findViewById(R.id.threadBody);
             holder.date = (TextView) convertView1.findViewById(R.id.threadDate);
+            holder.wrapper = (LinearLayout) convertView1.findViewById(R.id.parent_wrapper);
+            holder.inner_wrapper = (LinearLayout) convertView1.findViewById(R.id.inner_wrapper);
+            holder.delivery_image = (ImageView) convertView1.findViewById(R.id.delivery_image);
             convertView1.setTag(holder);
         } else {
             holder = (Holder) convertView1.getTag();
         }
         Message message = getItem(position);
-        holder.wrapper = (LinearLayout) convertView1
-                .findViewById(R.id.parent_wrapper);
+
+        if(message.deliveryStatus==0 && message.messageNumber.equals("Me")){
+            holder.delivery_image.setVisibility(ImageView.VISIBLE);
+        } else {
+            holder.delivery_image.setVisibility(ImageView.GONE);
+        }
+
         try {
             if (message.messageNumber.equals("Me")) {
-                holder.messageContent.setBackgroundResource(R.drawable.bubbles_sent);
+                holder.messageContent.setBackgroundResource(R.drawable.bubble_send);
                 holder.messageContent.setTextColor(Color.BLACK);
                 holder.wrapper.setGravity(Gravity.END);
+                holder.inner_wrapper.setGravity(Gravity.END);
+                Log.d("Delivery: ",holder.messageContent+" "+message.deliveryStatus);
+
             } else {
                 SharedPreferences colorPref = ctx.getSharedPreferences("colors", ctx.MODE_PRIVATE);
                 int color = colorPref.getInt("color",-1);
                 switch (color) {
                         case -1:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_1);
+                                    .setBackgroundResource(R.drawable.bubble_1);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 1:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_1);
+                                    .setBackgroundResource(R.drawable.bubble_1);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 2:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_2);
+                                    .setBackgroundResource(R.drawable.bubble_2);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 4:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_4);
+                                    .setBackgroundResource(R.drawable.bubble_4);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 5:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_5);
+                                    .setBackgroundResource(R.drawable.bubble_5);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 6:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_6);
+                                    .setBackgroundResource(R.drawable.bubble_6);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 7:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_7);
+                                    .setBackgroundResource(R.drawable.bubble_7);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 8:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_8);
+                                    .setBackgroundResource(R.drawable.bubble_8);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 10:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_10);
+                                    .setBackgroundResource(R.drawable.bubble_10);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 11:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_11);
+                                    .setBackgroundResource(R.drawable.bubble_11);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                         case 12:
                             holder.messageContent
-                                    .setBackgroundResource(R.drawable.bubbles_12);
+                                    .setBackgroundResource(R.drawable.bubble_12);
                             holder.messageContent.setTextColor(Color.WHITE);
                             holder.wrapper.setGravity(Gravity.START);
+                            holder.inner_wrapper.setGravity(Gravity.START);
                             break;
                 }
             }
@@ -212,7 +235,9 @@ public class ThreadAdapter extends ArrayAdapter<Message> {
      */
     private class Holder {
         public TextView messageContent, date;
+        public ImageView delivery_image;
         public LinearLayout wrapper;
+        public LinearLayout inner_wrapper;
         public Typeface face;
     }
 }

@@ -62,7 +62,7 @@
         </receiver>
         <receiver android:name=".DeliveryBroadcastReceiver" >
             <intent-filter>
-                <action android:name="SMS_SENT" />
+                <action android:name="SMS_DELIVERED" />
             </intent-filter>
         </receiver>
 

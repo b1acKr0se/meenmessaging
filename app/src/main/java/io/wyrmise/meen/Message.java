@@ -6,6 +6,8 @@ public class Message implements Comparable<Message>, Cloneable{
     public String messageNumber;
     public String messageContent;
     public String messageDate;
+    public int messageType;
+    public int deliveryStatus;
     public int readState;
 
     public Message(){

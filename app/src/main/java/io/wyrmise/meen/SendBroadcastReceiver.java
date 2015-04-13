@@ -17,18 +17,12 @@ public class SendBroadcastReceiver extends BroadcastReceiver{
     private static final String SMS_SENT = "SMS_SENT";
 
     public void onReceive(Context context, Intent intent){
-        Log.d("Receive","Working on it");
         String action = intent.getAction();
         if(action.equals(SMS_SENT)){
             Log.d("ResultCode",""+getResultCode());
-            Log.d("ResultCode","RESULT_OK"+Activity.RESULT_OK);
-            Log.d("ResultCode","RESULT_ERROR_GENERIC_FAILURE"+SmsManager.RESULT_ERROR_GENERIC_FAILURE);
-            Log.d("ResultCode","RESULT_ERROR_NO_SERVICE"+SmsManager.RESULT_ERROR_NO_SERVICE);
-            Log.d("ResultCode","RESULT_ERROR_NULL_PDU"+SmsManager.RESULT_ERROR_NULL_PDU);
-            Log.d("ResultCode","SmsManager.RESULT_ERROR_RADIO_OFF"+SmsManager.RESULT_ERROR_RADIO_OFF);
             switch(getResultCode()){
                 case Activity.RESULT_OK:
-                    Toast.makeText(context, "SMS Sent",
+                    Toast.makeText(context, "SMS has been sent",
                             Toast.LENGTH_SHORT).show();
                     break;
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:

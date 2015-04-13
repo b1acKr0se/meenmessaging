@@ -72,7 +72,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -91,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
     RecyclerView.Adapter mAdapter;                        // Declaring Adapter For Recycler View
     RecyclerView.LayoutManager mLayoutManager;            // Declaring Layout Manager as a linear layout manager
-    DrawerLayout drawerLayout;                                  // Declaring DrawerLayout
+    DrawerLayout drawerLayout;                            // Declaring DrawerLayout
     ActionBarDrawerToggle mDrawerToggle;
 
     private TextView noMessage;
@@ -101,6 +100,7 @@ public class MainActivity extends ActionBarActivity implements
     private static final String LIST_STATE = "listState";
     public static int fontCode = -1; //initial value of the global font
     public static boolean isNightMode; //whether the night mode should be enabled
+
     // listens for changes in the preference when user goes back to main activity
     SharedPreferences.OnSharedPreferenceChangeListener myPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener(){
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -134,7 +134,6 @@ public class MainActivity extends ActionBarActivity implements
     static boolean hasBackground = false; // black or white background
     static int colorCode = 1; //initial value of toolbar's color
     static HashMap<String, Drawable> contactPictureID = new HashMap<String, Drawable>();
-    static HashMap<String,ArrayList<Message>> cacheThread = new HashMap<String,ArrayList<Message>>();
     final String SENT = "SMS_SENT";
     final String DELIVERED = "SMS_DELIVERED";
     SwipeMenuListView messageList; //custom listview for swiping
@@ -852,46 +851,38 @@ public class MainActivity extends ActionBarActivity implements
                         number = number.substring(3);
                         number = "0" + number;
                     }
+
                     if (contacts.containsKey(number))
                         message.messageNumber = contacts.get(number);
                     else
                         message.messageNumber = message.messageNumber.replace(
                                 "-", "");
                     smsInbox.add(message);
-                    Log.d(message.messageNumber,"read state: "+message.readState);
                 } while (cursor.moveToPrevious());
                 cursor.close();
             }
         }
 
-        Collections.sort(smsInbox);
-        ArrayList<Message> getThreadSms = new ArrayList<Message>();
+        ArrayList<Message> getThreadSms = new ArrayList<>();
         try {
             for (int i = 0; i < smsInbox.size(); i++) {
-                Message msg = (Message) smsInbox.get(i);
-                String number = msg.messageNumber.replace(" ", "").replace("-","");
+                Message msg = smsInbox.get(i);
                 if (getThreadSms.size() == 0)
                     getThreadSms.add(msg);
                 else {
                     for (int j = 0; j < getThreadSms.size(); j++) {
-                        Message msg1 = (Message) getThreadSms.get(j);
-                        if (number.equals(msg1.messageNumber.replace(" ", "")
-                                .replace("-", "")))
+                        Message msg1 = getThreadSms.get(j);
+                        if (msg.messageNumber.equals(msg1.messageNumber))
                             break;
                         if (j == getThreadSms.size() - 1)
-                            if (!number.equals(msg1.messageNumber.replace(" ",
-                                    "").replace("-", "")))
+                            if (!msg.messageNumber.equals(msg1.messageNumber))
                                 getThreadSms.add(msg);
                     }
                 }
             }
             for (int i = 0; i < getThreadSms.size() - 1; i++) {
-                if (getThreadSms.get(i).messageNumber
-                        .replace(" ", "")
-                        .replace("-", "")
-                        .equals(getThreadSms.get(i + 1).messageNumber.replace(
-                                " ", "").replace("-", ""))) {
-                    getThreadSms.remove(i + 1);
+                if (getThreadSms.get(i).messageNumber.equals(getThreadSms.get(i + 1).messageNumber)) {
+                    getThreadSms.remove(i+1);
                 }
             }
         } catch (Exception e) {

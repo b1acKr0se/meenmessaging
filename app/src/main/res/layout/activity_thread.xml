@@ -8,6 +8,8 @@
     android:focusableInTouchMode="true"
     tools:context="${relativePackage}.${activityClass}">
 
+
+
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/toolbar"
@@ -18,12 +20,24 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:elevation="4dp"
         >
+
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/progress_wheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            wheel:matProg_barColor="#FFFFFF"
+            android:layout_gravity="end"
+            wheel:matProg_progressIndeterminate="true"
+            android:layout_marginEnd="15dp"/>
+
     </android.support.v7.widget.Toolbar>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="24dp"
+        android:paddingTop="10dp"
         android:fitsSystemWindows="true"
         android:focusableInTouchMode="true"
         android:descendantFocusability="beforeDescendants">
@@ -77,15 +91,6 @@
             android:text="160"
             android:textColor="@color/dark_green" />
 
-        <com.pnikosis.materialishprogress.ProgressWheel
-            android:id="@+id/progress_wheel"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            wheel:matProg_barColor="#5588FF"
-            wheel:matProg_progressIndeterminate="true" />
 
         <ListView
             android:id="@+id/thread_view"
@@ -95,6 +100,7 @@
             android:divider="@null"
             android:dividerHeight="0dp"
             android:listSelector="@color/transparent"
+            android:layout_marginTop="55dp"
             android:stackFromBottom="true"
             android:transcriptMode="alwaysScroll"></ListView>
 

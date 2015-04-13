@@ -5,19 +5,36 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/threadBody"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/inner_wrapper"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5sp"
-        android:layout_marginEnd="10sp"
-        android:layout_marginStart="5sp"
-        android:layout_marginTop="5sp"
-        android:background="@drawable/bubbles_0"
-        android:maxWidth="600px"
-        android:paddingLeft="10sp"
-        android:paddingStart="10sp"
-        android:text="@string/hello_world"/>
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <ImageView
+            android:id="@+id/delivery_image"
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/complete_icon"
+            android:layout_marginTop="15sp"
+            android:layout_marginEnd="5sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/threadBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:layout_marginEnd="10sp"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="5sp"
+            android:background="@drawable/bubble_1"
+            android:maxWidth="600px"
+            android:paddingLeft="10sp"
+            android:paddingStart="10sp"
+            android:text="@string/hello_world"/>
+        </LinearLayout>
 
     <TextView
         android:id="@+id/threadDate"

@@ -17,11 +17,15 @@ public class DeliveryBroadcastReceiver extends BroadcastReceiver{
 
     public void onReceive(Context context, Intent intent){
         String action = intent.getAction();
+        Log.d("ResultCode","delivery "+getResultCode());
         if(action.equals(SMS_DELIVERED)){
+            String phone = intent.getStringExtra("Phone");
+            String content = intent.getStringExtra("Message");
             switch (getResultCode()) {
                 case Activity.RESULT_OK:
                     Toast.makeText(context, "SMS Delivered",
                             Toast.LENGTH_SHORT).show();
+                    NewSmsBroadcastReceiver.markSmsAsDelivered(context,phone,content);
                     Log.d("SMS Delivery","RESULT_OK");
                     break;
                 case Activity.RESULT_CANCELED:
