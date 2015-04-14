@@ -29,6 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.wyrmise.meen.Helper.Utils;
+import io.wyrmise.meen.Object.Message;
+
 public class SendActivity extends ActionBarActivity {
     ImageButton sendBtn;
     EditText phone_edt, msg_edt;
@@ -183,16 +186,16 @@ public class SendActivity extends ActionBarActivity {
         String msg = msg_edt.getText().toString();
         try {
             Message message = new Message();
-            message.messageNumber=phone_num;
-            message.originalAddress=phone_num;
-            message.messageContent=msg;
+            message.name =phone_num;
+            message.address =phone_num;
+            message.content =msg;
             SimpleDateFormat hours = new SimpleDateFormat("h:mm a",
                     Locale.US);
-            message.messageDate=hours.format(new Date());
+            message.date =hours.format(new Date());
 
             Intent deliveredIntent = new Intent(DELIVERED);
-            deliveredIntent.putExtra("Phone",message.originalAddress);
-            deliveredIntent.putExtra("Message",message.messageContent);
+            deliveredIntent.putExtra("Phone",message.address);
+            deliveredIntent.putExtra("Message",message.content);
 
             PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
                     new Intent(SENT), 0);

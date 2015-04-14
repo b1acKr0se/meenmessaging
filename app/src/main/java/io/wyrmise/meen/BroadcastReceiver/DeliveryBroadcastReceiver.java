@@ -1,4 +1,4 @@
-package io.wyrmise.meen;
+package io.wyrmise.meen.BroadcastReceiver;
 
 
 import android.app.Activity;
@@ -25,7 +25,7 @@ public class DeliveryBroadcastReceiver extends BroadcastReceiver{
                 case Activity.RESULT_OK:
                     Toast.makeText(context, "SMS Delivered",
                             Toast.LENGTH_SHORT).show();
-                    NewSmsBroadcastReceiver.markSmsAsDelivered(context,phone,content);
+                    NewSmsBroadcastReceiver.markSmsAsDelivered(context, phone, content);
                     Log.d("SMS Delivery","RESULT_OK");
                     break;
                 case Activity.RESULT_CANCELED:

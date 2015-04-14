@@ -1,4 +1,4 @@
-package io.wyrmise.meen;
+package io.wyrmise.meen.BroadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +9,9 @@ import android.telephony.SmsMessage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import io.wyrmise.meen.MainActivity;
+import io.wyrmise.meen.Object.Message;
 
 public class SmsBroadcastReceiver extends BroadcastReceiver {
 
@@ -29,10 +32,10 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
             }
 
             Message msg = new Message();
-            msg.messageNumber = address;
-            msg.messageContent = smsBody;
+            msg.name = address;
+            msg.content = smsBody;
             SimpleDateFormat hours = new SimpleDateFormat("h:mm a", Locale.US);
-            msg.messageDate = hours.format(new Date());
+            msg.date = hours.format(new Date());
             MainActivity inst = MainActivity.instance();
             inst.pushNotification(msg);
             inst.updateList(msg);

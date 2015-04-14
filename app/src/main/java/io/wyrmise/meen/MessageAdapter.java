@@ -2,10 +2,7 @@ package io.wyrmise.meen;
 
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,8 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import io.wyrmise.meen.Object.Message;
 
 /**
  * @author wyrmise
@@ -82,14 +81,14 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             holder = (Holder) convertView1.getTag();
         }
         Message message = getItem(position);
-        if (!MainActivity.contactPictureID.containsKey(message.messageNumber)) {
+        if (!MainActivity.contactPictureID.containsKey(message.name)) {
             holder.imgView.setImageResource(getDisplayPicture(message));
         } else
-            holder.imgView.setImageDrawable(MainActivity.contactPictureID.get(message.messageNumber));
+            holder.imgView.setImageDrawable(MainActivity.contactPictureID.get(message.name));
 
-        holder.messageTo.setText(message.messageNumber);
-        holder.messageContent.setText(message.messageContent);
-        holder.date.setText(message.messageDate);
+        holder.messageTo.setText(message.name);
+        holder.messageContent.setText(message.content);
+        holder.date.setText(message.date);
 
         if (MainActivity.fontCode == 2) {
             holder.messageTo.setTypeface(holder.bold);
@@ -101,7 +100,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             holder.date.setTypeface(null);
         }
 
-        if (message.readState == 0) {
+        if (message.read == 0) {
             holder.readStatus.setVisibility(ImageView.VISIBLE);
         } else {
             holder.readStatus.setVisibility(ImageView.GONE);
@@ -158,32 +157,19 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     public void addItem(Message msg) {
         Iterator<Message> iter = messageListArray.iterator();
         while (iter.hasNext()) {
-            Message message = (Message) iter.next();
-            if (message.messageNumber.equals(msg.messageNumber))
+            Message message = iter.next();
+            if (message.name.equals(msg.name))
                 iter.remove();
         }
         this.messageListArray.add(0, msg);
         notifyDataSetChanged();
     }
 
-    public Drawable getContactPicture(Message message) {
-        String actualPhoneNum = ThreadActivity.getPhoneNumber(message.messageNumber, ctx);
-        if (actualPhoneNum != null) {
-            Bitmap bm = MainActivity.getPhoto(ctx, actualPhoneNum);
-            if (bm != null) {
-                Resources res = ctx.getResources();
-                Drawable pic = MainActivity.getRoundedBitmap(res, bm);
-                return pic;
-            }
-        }
-        return null;
-    }
-
     public int getDisplayPicture(Message msg) {
-        if (!msg.messageNumber.substring(0, 1).matches("[0-9]")
-                && !msg.messageNumber.startsWith("+")) {
+        if (!msg.name.substring(0, 1).matches("[0-9]")
+                && !msg.name.startsWith("+")) {
             int color = MainActivity.colorCode;
-            String first = msg.messageNumber.substring(0, 1)
+            String first = msg.name.substring(0, 1)
                     .toLowerCase();
             if (first.equals("đ"))
                 first = "d";

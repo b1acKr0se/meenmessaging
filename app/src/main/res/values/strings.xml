@@ -48,5 +48,7 @@
     <string name="call">Call this person</string>
     <string name="title_activity_send">SendActivity</string>
     <string name="no_message">No Message</string>
+    <string name="toolbar_pic_title">Toolbar picture</string>
+    <string name="toolbar_pic_summary">Use contact picture in the toolbar</string>
 
 </resources>

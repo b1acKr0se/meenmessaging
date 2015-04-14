@@ -1,4 +1,4 @@
-package io.wyrmise.meen;
+package io.wyrmise.meen.Helper;
 
 
 import android.app.Activity;
@@ -7,6 +7,8 @@ import android.os.Build;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import io.wyrmise.meen.ExceptionActivity;
 
 public class ExceptionHandler implements
         java.lang.Thread.UncaughtExceptionHandler {

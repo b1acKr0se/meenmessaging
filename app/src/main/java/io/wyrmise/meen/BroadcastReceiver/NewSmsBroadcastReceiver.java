@@ -1,4 +1,4 @@
-package io.wyrmise.meen;
+package io.wyrmise.meen.BroadcastReceiver;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -24,6 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import io.wyrmise.meen.MainActivity;
+import io.wyrmise.meen.Object.Message;
+import io.wyrmise.meen.R;
+import io.wyrmise.meen.ThreadActivity;
+
 public class NewSmsBroadcastReceiver extends BroadcastReceiver {
 
     public static final String SMS_BUNDLE = "pdus";
@@ -33,11 +38,11 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
     public static void insertMessage(Context context, Message msg){
         SimpleDateFormat hours = new SimpleDateFormat("h:mm a",
                 Locale.US);
-        msg.messageDate=hours.format(new Date());
+        msg.date =hours.format(new Date());
         ContentValues values = new ContentValues();
-        values.put("address", msg.messageNumber);
-        values.put("body",msg.messageContent);
-        values.put("read",msg.readState);
+        values.put("address", msg.name);
+        values.put("body",msg.content);
+        values.put("read",msg.read);
         Uri uri = Uri.parse("content://sms/");
         context.getContentResolver().insert(uri,values);
     }
@@ -109,29 +114,29 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             Object[] sms = (Object[]) intentExtras.get(SMS_BUNDLE);
             String address  = "";
             String smsBody = "";
-
             for (int i = 0; i < sms.length; ++i) {
                 SmsMessage smsMessage = SmsMessage
                         .createFromPdu((byte[]) sms[i]);
                 smsBody = smsMessage.getMessageBody().toString();
                 address = smsMessage.getOriginatingAddress();
             }
-            Log.d("address",address);
             Message msg = new Message();
-            msg.messageNumber=address;
-            msg.messageContent=smsBody;
+            msg.name =address;
+            msg.address =address;
+            msg.content =smsBody;
             SimpleDateFormat hours = new SimpleDateFormat("h:mm a",
                     Locale.US);
-            msg.messageDate=hours.format(new Date());
-            msg.readState = 0;
+            msg.date =hours.format(new Date());
+            msg.read = 0;
+            msg.delivery = -1;
             insertMessage(context,msg);
             if(MainActivity.instance()==null) {
                 pushNotification(context,msg);
+
             }
             else {
-                MainActivity inst = MainActivity.instance();
                 pushNotification(context,msg);
-                inst.updateList(msg);
+                MainActivity.instance().updateList(msg);
             }
         }
     }
@@ -141,26 +146,26 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
                 context);
         Uri soundUri = RingtoneManager
                 .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        String address = message.messageNumber;
-        String number = message.messageNumber.replace(" ", "").replace("-", "");
+        String address = message.name;
+        String number = message.name.replace(" ", "").replace("-", "");
         if (number.startsWith("+84")) {
             number = number.substring(3);
             number = "0" + number;
         }
         SharedPreferences contactPrefs = context.getSharedPreferences("contacts", context.MODE_PRIVATE);
         if(contactPrefs.getString(number, null)!=null)
-            message.messageNumber = contactPrefs.getString(number, null);
-        Toast.makeText(context, "SMS from " + message.messageNumber,
+            message.name = contactPrefs.getString(number, null);
+        Toast.makeText(context, "SMS from " + message.name,
                 Toast.LENGTH_SHORT).show();
         mBuilder.setSmallIcon(R.drawable.ic_stat);
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
-        mBuilder.setContentTitle(message.messageNumber);
-        mBuilder.setContentText(message.messageContent);
+        mBuilder.setContentTitle(message.name);
+        mBuilder.setContentText(message.content);
         mBuilder.setAutoCancel(true);
         mBuilder.setSound(soundUri);
         Intent resultIntent = new Intent(context, ThreadActivity.class);
-        resultIntent.putExtra("Phone", message.messageNumber);
-        resultIntent.putExtra("originalAddress", address);
+        resultIntent.putExtra("Phone", message.name);
+        resultIntent.putExtra("address", address);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(ThreadActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack

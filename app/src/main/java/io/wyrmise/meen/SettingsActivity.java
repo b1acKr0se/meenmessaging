@@ -22,7 +22,7 @@ public class SettingsActivity extends ActionBarActivity
     public static final String KEY_DELAY_MODE = "pref_delay_mode";
     public static final String KEY_FONT_MODE = "pref_font_mode";
     public static final String KEY_SWIPE_BACK = "pref_swipe_back";
-
+    public static final String KEY_TOOLBAR_PICTURE = "pref_toolbar_pic";
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -132,6 +132,7 @@ public class SettingsActivity extends ActionBarActivity
                     return true;
                 }
             });
+
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,

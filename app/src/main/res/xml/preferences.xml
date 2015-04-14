@@ -18,6 +18,11 @@
             android:key="pref_swipe_back"
             android:summary="@string/swipe_summary"
             android:title="@string/swipe_title"/>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_toolbar_pic"
+            android:summary="@string/toolbar_pic_summary"
+            android:title="@string/toolbar_pic_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory

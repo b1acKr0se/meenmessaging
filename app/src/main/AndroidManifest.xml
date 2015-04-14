@@ -35,13 +35,13 @@
         </activity>
 
         <receiver
-            android:name=".NewSmsBroadcastReceiver"
+            android:name=".BroadcastReceiver.NewSmsBroadcastReceiver"
             android:permission="android.permission.BROADCAST_SMS" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".SmsBroadcastReceiver" >
+        <receiver android:name=".BroadcastReceiver.SmsBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
@@ -55,12 +55,12 @@
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".SendBroadcastReceiver" >
+        <receiver android:name=".BroadcastReceiver.SendBroadcastReceiver" >
             <intent-filter>
                 <action android:name="SMS_SENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".DeliveryBroadcastReceiver" >
+        <receiver android:name=".BroadcastReceiver.DeliveryBroadcastReceiver" >
             <intent-filter>
                 <action android:name="SMS_DELIVERED" />
             </intent-filter>

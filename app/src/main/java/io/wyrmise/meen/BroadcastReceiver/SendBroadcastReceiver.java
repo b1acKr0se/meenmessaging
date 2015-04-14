@@ -1,4 +1,4 @@
-package io.wyrmise.meen;
+package io.wyrmise.meen.BroadcastReceiver;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

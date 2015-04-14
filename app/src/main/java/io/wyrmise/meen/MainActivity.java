@@ -68,14 +68,19 @@ import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
-
+import java.util.Map;
+import java.util.Map.Entry;
+import io.wyrmise.meen.BroadcastReceiver.NewSmsBroadcastReceiver;
+import io.wyrmise.meen.BroadcastReceiver.SmsBroadcastReceiver;
+import io.wyrmise.meen.Helper.DateHelper;
+import io.wyrmise.meen.Helper.Utils;
+import io.wyrmise.meen.Object.Message;
 import me.drakeet.materialdialog.MaterialDialog;
 
 public class MainActivity extends ActionBarActivity implements
@@ -96,39 +101,37 @@ public class MainActivity extends ActionBarActivity implements
     private TextView noMessage;
 
     private int notificationID = 100; //based notification id
-    private static final int TYPE_INCOMING_MESSAGE = 1;
     private static final String LIST_STATE = "listState";
     public static int fontCode = -1; //initial value of the global font
     public static boolean isNightMode; //whether the night mode should be enabled
 
     // listens for changes in the preference when user goes back to main activity
-    SharedPreferences.OnSharedPreferenceChangeListener myPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener(){
+    SharedPreferences.OnSharedPreferenceChangeListener myPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             //the background theme
-            if(key.equals(SettingsActivity.KEY_PREF_THEME)) {
+            if (key.equals(SettingsActivity.KEY_PREF_THEME)) {
                 onThemeChanged(prefs);
                 Toast.makeText(getBaseContext(), "Background changed", Toast.LENGTH_SHORT).show();
             }
             //the toolbar color
-            else if(key.equals(SettingsActivity.KEY_PREF_ACTION_BAR)){
+            else if (key.equals(SettingsActivity.KEY_PREF_ACTION_BAR)) {
                 onActionBarColorChanged(prefs);
                 Toast.makeText(getBaseContext(), "Theme changed", Toast.LENGTH_SHORT).show();
             }
             //the floating action button color
-            else if(key.equals(SettingsActivity.KEY_FAB_THEME)){
+            else if (key.equals(SettingsActivity.KEY_FAB_THEME)) {
             }
             //the night mode
-            else if(key.equals(SettingsActivity.KEY_NIGHT_MODE)){
-                if(isNightMode)
+            else if (key.equals(SettingsActivity.KEY_NIGHT_MODE)) {
+                if (isNightMode)
                     enableNightMode();
             }
             //the global font
-            else if(key.equals(SettingsActivity.KEY_FONT_MODE)){
+            else if (key.equals(SettingsActivity.KEY_FONT_MODE)) {
                 onFontChanged();
             }
         }
     };
-    public static boolean refreshOnDataChanged = false;
     static MainActivity instance; //the current instance of the Activity
     static HashMap<String, String> contacts; //array of contacts that is used accross the app
     static boolean hasBackground = false; // black or white background
@@ -148,7 +151,6 @@ public class MainActivity extends ActionBarActivity implements
     private Parcelable mListState = null;  //holds the current position of the listview
 
     /**
-     *
      * @return returns a static instance of the class
      */
     public static MainActivity instance() {
@@ -157,19 +159,19 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * get the current hour of the device
+     *
      * @return whether current time is night or day
      */
-    public boolean isNightTime(){
+    public boolean isNightTime() {
         Calendar cal = Calendar.getInstance();
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         return hour < 6 || hour > 21;
     }
 
     /**
-     *
      * @return boolean on whether it is night and night mode is enabled
      */
-    public boolean isNightModeEnable(){
+    public boolean isNightModeEnable() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean getMode = sharedPreferences.getBoolean(SettingsActivity.KEY_NIGHT_MODE, false);
         return isNightMode = (getMode && (isNightTime()));
@@ -178,10 +180,10 @@ public class MainActivity extends ActionBarActivity implements
     /**
      * change the application theme to night mode
      */
-    public void enableNightMode(){
+    public void enableNightMode() {
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
         isNightMode = isNightModeEnable();
-        if(isNightMode) {
+        if (isNightMode) {
             mainLayout.setBackgroundResource(R.color.night_background);
             toolbar.setBackgroundColor(getResources().getColor(R.color.night));
         } else return;
@@ -196,12 +198,12 @@ public class MainActivity extends ActionBarActivity implements
         instance = this;
     }
 
-    public void onFontChanged(){
+    public void onFontChanged() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String getFont = sharedPreferences.getString(SettingsActivity.KEY_FONT_MODE, null);
         int fontSelection = -1;
-        if(getFont!=null) fontSelection = Integer.parseInt(getFont);
-        switch(fontSelection){
+        if (getFont != null) fontSelection = Integer.parseInt(getFont);
+        switch (fontSelection) {
             case 1:
                 fontCode = 1;
                 break;
@@ -211,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    public void onThemeChanged(SharedPreferences sharedPreferences){
+    public void onThemeChanged(SharedPreferences sharedPreferences) {
         try {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             String getTheme = sharedPreferences.getString(SettingsActivity.KEY_PREF_THEME, null);
@@ -229,13 +231,13 @@ public class MainActivity extends ActionBarActivity implements
                     hasBackground = true;
                     break;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    public void onFabColorChanged(FloatingActionButton fab){
+    public void onFabColorChanged(FloatingActionButton fab) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String getColor = prefs.getString(SettingsActivity.KEY_FAB_THEME, null);
         int colorSelection = -1;
@@ -294,7 +296,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    public void onActionBarColorChanged(SharedPreferences sharedPreferences){
+    public void onActionBarColorChanged(SharedPreferences sharedPreferences) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
         int colorSelection = -1;
@@ -356,12 +358,12 @@ public class MainActivity extends ActionBarActivity implements
                 recreate();
                 break;
         }
-        editor.putInt("color",colorCode);
+        editor.putInt("color", colorCode);
         editor.commit();
     }
 
 
-    public void onCreateTheme(){
+    public void onCreateTheme() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
         int colorSelection = -1;
@@ -413,10 +415,9 @@ public class MainActivity extends ActionBarActivity implements
                 colorCode = 12;
                 break;
         }
-        editor.putInt("color",colorCode);
+        editor.putInt("color", colorCode);
         editor.commit();
     }
-
 
 
     @Override
@@ -424,7 +425,7 @@ public class MainActivity extends ActionBarActivity implements
         /* check the preference and enable and disable the night mode accordingly */
         if (this != null) {
             isNightMode = isNightModeEnable();
-            if(isNightMode){
+            if (isNightMode) {
                 setTheme(R.style.Night);
             } else {
                 onCreateTheme();
@@ -449,7 +450,7 @@ public class MainActivity extends ActionBarActivity implements
             onFontChanged();
 
             isNightMode = isNightModeEnable();
-            if(isNightMode){
+            if (isNightMode) {
                 enableNightMode();
                 toolbar.setBackgroundColor(getResources().getColor(R.color.night));
             } else {
@@ -461,8 +462,8 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    private void onToolbarColorChanged(){
-        switch (colorCode){
+    private void onToolbarColorChanged() {
+        switch (colorCode) {
             case 1:
                 toolbar.setBackgroundColor(getResources().getColor(R.color.green));
                 break;
@@ -496,7 +497,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    private void initNavigationDrawer(){
+    private void initNavigationDrawer() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         onToolbarColorChanged();
         setSupportActionBar(toolbar);
@@ -505,7 +506,7 @@ public class MainActivity extends ActionBarActivity implements
 
         mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
-        mAdapter = new NavAdapter(TITLES,ICONS,NAME,ID);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        mAdapter = new NavAdapter(TITLES, ICONS, NAME, ID);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
 
@@ -517,7 +518,7 @@ public class MainActivity extends ActionBarActivity implements
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);        // drawerLayout object Assigned to the view
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.drawer_open, R.string.drawer_close){
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -535,10 +536,11 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        switch (position){
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        switch (position) {
                             case 1:
-                                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                                 startActivity(intent);
                         }
                     }
@@ -553,13 +555,9 @@ public class MainActivity extends ActionBarActivity implements
     @Override
     public void onResume() {
         super.onResume();
-        if(refreshOnDataChanged){
             populateMessageList();
             messageListAdapter.notifyDataSetChanged();
-            refreshOnDataChanged=false;
-            Log.d("notify data changed", "true");
-        }
-        if(isNightMode)
+        if (isNightMode)
             enableNightMode();
         prefs.registerOnSharedPreferenceChangeListener(myPrefListener);
         if (mListState != null)
@@ -569,7 +567,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * @effects initialises a number of graphic components and retrieve the sms
-     *          message
+     * message
      */
     private void initViews() {
         recordsStored = new ArrayList<Message>();
@@ -582,6 +580,7 @@ public class MainActivity extends ActionBarActivity implements
             @Override
             public void onScrollDown() {
             }
+
             @Override
             public void onScrollUp() {
             }
@@ -589,12 +588,13 @@ public class MainActivity extends ActionBarActivity implements
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
-        fab.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),
                         SendActivity.class);
                 startActivity(intent);
@@ -625,7 +625,7 @@ public class MainActivity extends ActionBarActivity implements
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
                 // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.argb(200,0xF9,
+                deleteItem.setBackground(new ColorDrawable(Color.argb(200, 0xF9,
                         0x3F, 0x25)));
                 // set item width
                 deleteItem.setWidth(dp2px(40));
@@ -644,9 +644,9 @@ public class MainActivity extends ActionBarActivity implements
                 switch (index) {
                     case 0:
                         Message message = (Message) messageList.getAdapter().getItem(position);
-                        if (message.readState == 1) {
-                            message.readState = 0;
-                            NewSmsBroadcastReceiver.markSmsAsUnread(getBaseContext(), message.originalAddress, message.messageContent);
+                        if (message.read == 1) {
+                            message.read = 0;
+                            NewSmsBroadcastReceiver.markSmsAsUnread(getBaseContext(), message.address, message.content);
                             messageListAdapter.notifyDataSetChanged();
                         }
                         break;
@@ -689,17 +689,13 @@ public class MainActivity extends ActionBarActivity implements
 
         messageList.setOnItemClickListener(this);
         messageList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
-        if (mListState != null)
-            messageList.onRestoreInstanceState(mListState);
-        mListState = null;
         new Task().execute();
 
     }
 
     /**
      * @effects calls method to retrieve the sms message and set the adapter for
-     *          the current ListView
+     * the current ListView
      */
     public void populateMessageList() {
         messageListAdapter = new MessageAdapter(this,
@@ -729,6 +725,7 @@ public class MainActivity extends ActionBarActivity implements
                         return false;
                 }
             }
+
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mode.getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -748,15 +745,15 @@ public class MainActivity extends ActionBarActivity implements
             }
         });
 
-        }
+    }
 
     /**
      * @effects starts a thread to fetch the message if there is no data in the
-     *          array, otherwise set the array to the adapter to notify change
+     * array, otherwise set the array to the adapter to notify change
      */
     private void fetchInboxMessages() {
         if (listInboxMessages == null) {
-            recordsStored = fetchInboxSms(TYPE_INCOMING_MESSAGE);
+            recordsStored = fetchInboxSms();
             listInboxMessages = recordsStored;
             contactPictureID = RetrieveContactPicture();
         } else {
@@ -765,12 +762,21 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Entry<T, E> entry : map.entrySet()) {
+            if (value.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public HashMap<String, String> getContacts() {
-        HashMap<String, String> getContacts = new HashMap<String, String>();
+        HashMap<String, String> getContacts = new HashMap<>();
         editor = getSharedPreferences("contacts", MODE_PRIVATE).edit();
         Cursor managedCursor = getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                new String[] { ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER },
+                new String[]{ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER},
                 null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         if (managedCursor != null) {
             managedCursor.moveToLast();
@@ -782,13 +788,13 @@ public class MainActivity extends ActionBarActivity implements
                         String key = managedCursor.getString(managedCursor
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         if (key != null) {
-                            key = key.replace(" ", "").replace("-", "");
-                            if (key.startsWith("+")) {
-                                key = key.substring(3);
-                                key = "0" + key;
+                            String number = StringUtils.replace(key," ","");
+                            if (number.startsWith("+")) {
+                                number = number.substring(3);
+                                number = "0" + number;
                             }
-                            getContacts.put(key, value);
-                            editor.putString(key, value);
+                            getContacts.put(number, value);
+                            editor.putString(number, value);
                         }
                     } while (managedCursor.moveToNext());
                 }
@@ -799,96 +805,94 @@ public class MainActivity extends ActionBarActivity implements
         return getContacts;
     }
 
-    public ArrayList<Message> fetchInboxSms(int type) {
+    public String getContactData(String id){
+        String number="";
+        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id, null, null);
+        if(phones.moveToFirst()) {
+            number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+        phones.close();
+        return number;
+    }
+
+    protected synchronized ArrayList<Message> getConversations() {
+        ArrayList<Message> smsInbox = new ArrayList<Message>();
+        contacts = getContacts();
+        Cursor c = getContentResolver().query(
+                Uri.parse("content://mms-sms/conversations?simple=true"), new String[]{"date", "message_count", "recipient_ids","snippet"} , null, null, "normalized_date desc");
+        if (c.moveToFirst()) {
+            do {
+                Message conv = new Message();
+                String recipient = c.getString(c.getColumnIndex("recipient_ids"));
+                conv.address = getContactData(recipient);
+                if(contacts.containsKey(conv.address))
+                 conv.name = contacts.get(conv.address);
+                else
+                conv.name = conv.address;
+                conv.content = c.getString(c.getColumnIndex("snippet"));
+                long milliSeconds = c.getLong(c.getColumnIndex("date"));
+                conv.date = DateHelper.format(milliSeconds);
+                smsInbox.add(conv);
+            } while (c.moveToNext());
+        }
+        c.close();
+        return smsInbox;
+    }
+
+    public ArrayList<Message> fetchInboxSms() {
         ArrayList<Message> smsInbox = new ArrayList<Message>();
 
         Uri uriSms = Uri.parse("content://sms/");
 
         contacts = getContacts();
 
-        Cursor cursor = this.getContentResolver()
-                .query(uriSms,
-                        new String[] { "_id", "address", "date", "body",
-                                "type", "read" }, null, null,
-                        "date" + " COLLATE LOCALIZED");
+        Cursor cursor = this.getContentResolver().query(uriSms,
+                new String[]{"_id", "address", "date", "body",
+                        "type", "read"}, null, null,
+                "date" + " COLLATE LOCALIZED");
         if (cursor != null) {
             cursor.moveToLast();
             if (cursor.getCount() > 0) {
                 do {
                     Message message = new Message();
-                    message.messageID = cursor.getString(cursor
+                    message.id = cursor.getString(cursor
                             .getColumnIndex("_id"));
-                    message.messageNumber = cursor.getString(cursor
+                    message.name = cursor.getString(cursor
                             .getColumnIndex("address"));
-                    message.originalAddress = cursor.getString(cursor
-                            .getColumnIndex("address"));
-                    message.messageContent = cursor.getString(cursor
+                    message.address = message.name;
+                    message.content = cursor.getString(cursor
                             .getColumnIndex("body"));
                     long milliSeconds = cursor.getLong(cursor
                             .getColumnIndex("date"));
-                    message.readState = cursor.getInt(cursor.getColumnIndex("read"));
-                    SimpleDateFormat initFormat = new SimpleDateFormat(
-                            "MMM dd", Locale.US);
-                    SimpleDateFormat hours = new SimpleDateFormat("h:mm aa",
-                            Locale.US);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(milliSeconds);
-                    String finalDateString = initFormat.format(calendar
-                            .getTime());
-                    Date now = new Date();
-                    String strDate = initFormat.format(now);
+                    message.read = cursor.getInt(cursor.getColumnIndex("read"));
+                    message.date = DateHelper.format(milliSeconds);
+                    String number = StringUtils.replace(message.name," ","");
 
-                    if (finalDateString.equals(strDate)) {
-                        finalDateString = hours.format(calendar.getTime());
-                        message.messageDate = finalDateString;
-                    } else {
-                        finalDateString = initFormat.format(calendar.getTime());
-                        message.messageDate = finalDateString;
-                    }
-                    String number = message.messageNumber.replace(" ", "")
-                            .replace("-", "");
                     if (number.startsWith("+")) {
                         number = number.substring(3);
                         number = "0" + number;
                     }
 
                     if (contacts.containsKey(number))
-                        message.messageNumber = contacts.get(number);
-                    else
-                        message.messageNumber = message.messageNumber.replace(
-                                "-", "");
-                    smsInbox.add(message);
+                        message.name = contacts.get(number);
+                    if (smsInbox.size() == 0)
+                        smsInbox.add(message);
+                    else {
+                        for (int i = 0; i < smsInbox.size(); i++) {
+                            Message msg = smsInbox.get(i);
+                            if (msg.name.equals(message.name))
+                                break;
+                            if (i == smsInbox.size() - 1) {
+                                if (!msg.name.equals(message.name))
+                                    smsInbox.add(message);
+                            }
+                        }
+                    }
                 } while (cursor.moveToPrevious());
                 cursor.close();
             }
         }
-
-        ArrayList<Message> getThreadSms = new ArrayList<>();
-        try {
-            for (int i = 0; i < smsInbox.size(); i++) {
-                Message msg = smsInbox.get(i);
-                if (getThreadSms.size() == 0)
-                    getThreadSms.add(msg);
-                else {
-                    for (int j = 0; j < getThreadSms.size(); j++) {
-                        Message msg1 = getThreadSms.get(j);
-                        if (msg.messageNumber.equals(msg1.messageNumber))
-                            break;
-                        if (j == getThreadSms.size() - 1)
-                            if (!msg.messageNumber.equals(msg1.messageNumber))
-                                getThreadSms.add(msg);
-                    }
-                }
-            }
-            for (int i = 0; i < getThreadSms.size() - 1; i++) {
-                if (getThreadSms.get(i).messageNumber.equals(getThreadSms.get(i + 1).messageNumber)) {
-                    getThreadSms.remove(i+1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return getThreadSms;
+        return smsInbox;
     }
 
     public void pushNotification(final Message message) {
@@ -897,25 +901,25 @@ public class MainActivity extends ActionBarActivity implements
                 this);
         Uri soundUri = RingtoneManager
                 .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        String number = message.messageNumber.replace(" ", "").replace("-", "");
+        String number = message.name.replace(" ", "").replace("-", "");
         if (number.startsWith("+84")) {
             number = number.substring(3);
             number = "0" + number;
         }
         if (contacts.containsKey(number))
-            message.messageNumber = contacts.get(number);
-        Toast.makeText(this, "SMS from " + message.messageNumber,
+        message.name = contacts.get(number);
+        Toast.makeText(this, "SMS from " + message.name,
                 Toast.LENGTH_SHORT).show();
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setSmallIcon(R.drawable.ic_stat)
-                .setContentTitle(message.messageNumber)
-                .setContentText(message.messageContent)
+                .setContentTitle(message.name)
+                .setContentText(message.content)
                 .setAutoCancel(true)
                 .setSound(soundUri);
         Intent resultIntent = new Intent(this, ThreadActivity.class);
-        resultIntent.putExtra("Phone", message.messageNumber);
-        resultIntent.putExtra("originalAddress",message.originalAddress);
+        resultIntent.putExtra("Phone", message.name);
+        resultIntent.putExtra("address", message.address);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(ThreadActivity.class);
 
@@ -941,7 +945,7 @@ public class MainActivity extends ActionBarActivity implements
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         boolean getMode = prefs.getBoolean(SettingsActivity.KEY_POPUP_MODE, true);
 
-        if(getMode && !LifeCycleHandler.isForegrounded()) {
+        if (getMode && !LifeCycleHandler.isForegrounded()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             LayoutInflater inflater = this.getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.activity_dialog, null);
@@ -962,10 +966,10 @@ public class MainActivity extends ActionBarActivity implements
                         charCount.setVisibility(TextView.VISIBLE);
                 }
             });
-            messageView.setText(message.messageContent);
+            messageView.setText(message.content);
 
             final AlertDialog alertDialog = dialogBuilder.create();
-            alertDialog.setTitle("Message from " + message.messageNumber);
+            alertDialog.setTitle("Message from " + message.name);
 
             reply.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -980,7 +984,7 @@ public class MainActivity extends ActionBarActivity implements
                 public void onClick(View v) {
                     alertDialog.dismiss();
                     Intent intent = new Intent(getBaseContext(), ThreadActivity.class);
-                    String phone = message.messageNumber;
+                    String phone = message.name;
                     intent.putExtra("Phone", phone);
                     startActivity(intent);
                 }
@@ -1018,17 +1022,14 @@ public class MainActivity extends ActionBarActivity implements
 
     public void updateList(Message message) {
         try {
-            if(Character.isDigit(message.messageNumber.charAt(0)) || message.messageNumber.startsWith("+")) {
-                String number = message.messageNumber.replace(" ", "").replace("-",
-                        "");
+            if (Character.isDigit(message.name.charAt(0)) || message.name.startsWith("+")) {
+                String number = message.name.replace(" ", "").replace("-","");
                 if (number.startsWith("+")) {
                     number = number.substring(3);
                     number = "0" + number;
                 }
-                Log.d("phone number: ", number);
                 if (contacts.containsKey(number))
-                    message.messageNumber = contacts.get(number);
-                Log.d("phone number: ", contacts.get(number));
+                    message.name = contacts.get(number);
             }
             messageListAdapter.addItem(message);
         } catch (Exception e) {
@@ -1058,14 +1059,14 @@ public class MainActivity extends ActionBarActivity implements
         Intent intent = new Intent(this, ThreadActivity.class);
 
         Message msg = (Message) messageList.getAdapter().getItem(position);
-        String phone = msg.messageNumber;
-        if (msg.readState == 0) {
-            msg.readState = 1;
-            NewSmsBroadcastReceiver.markSmsAsRead(this, msg.originalAddress, msg.messageContent);
+        String phone = msg.name;
+        if (msg.read == 0) {
+            msg.read = 1;
+            NewSmsBroadcastReceiver.markSmsAsRead(this, msg.address, msg.content);
             messageListAdapter.notifyDataSetChanged();
         }
         intent.putExtra("Phone", phone);
-        intent.putExtra("originalAddress",msg.originalAddress);
+        intent.putExtra("address", msg.address);
         startActivity(intent);
     }
 
@@ -1086,7 +1087,7 @@ public class MainActivity extends ActionBarActivity implements
         try {
             super.onPostCreate(savedInstanceState);
             mDrawerToggle.syncState();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1109,23 +1110,23 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
     }
 
-    public HashMap<String, Drawable> RetrieveContactPicture(){
+    public HashMap<String, Drawable> RetrieveContactPicture() {
         HashMap hm = new HashMap();
-        for(int i =0; i<recordsStored.size();i++){
+        for (int i = 0; i < recordsStored.size(); i++) {
             Message message = recordsStored.get(i);
-            Bitmap bmp = getPhoto(this,message.originalAddress);
-            if(bmp!=null){
-                Drawable d = getRoundedBitmap(getResources(),bmp);
-                hm.put(message.messageNumber,d);
+            Bitmap bmp = getPhoto(this, message.address);
+            if (bmp != null) {
+                Drawable d = getRoundedBitmap(getResources(), bmp);
+                hm.put(message.name, d);
             }
         }
         return hm;
@@ -1133,7 +1134,7 @@ public class MainActivity extends ActionBarActivity implements
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(Gravity.START|Gravity.LEFT)){
+        if (drawerLayout.isDrawerOpen(Gravity.START | Gravity.LEFT)) {
             drawerLayout.closeDrawers();
             return;
         }
@@ -1152,16 +1153,16 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         protected void onPostExecute(Boolean result) {
             populateMessageList();
-            if(recordsStored.size()>0) {
+            if (recordsStored.size() > 0) {
                 progressWheel.setVisibility(ProgressWheel.GONE);
                 messageList.setVisibility(ListView.VISIBLE);
                 fab.setVisibility(FloatingActionButton.VISIBLE);
                 noMessage.setVisibility(TextView.GONE);
             } else {
+                progressWheel.setVisibility(ProgressWheel.GONE);
                 noMessage.setVisibility(TextView.VISIBLE);
                 fab.setVisibility(FloatingActionButton.VISIBLE);
             }
-
             super.onPostExecute(result);
         }
 
@@ -1174,6 +1175,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * initialise the receiver depends on whether the device's API is Kitkat and later
+     *
      * @param menu
      * @return
      */
@@ -1203,7 +1205,7 @@ public class MainActivity extends ActionBarActivity implements
             return null;
         }
         if (photoUri != null) {
-            InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, photoUri,true);
+            InputStream input = ContactsContract.Contacts.openContactPhotoInputStream(cr, photoUri, true);
             if (input != null) {
                 return BitmapFactory.decodeStream(input);
             }
@@ -1213,11 +1215,10 @@ public class MainActivity extends ActionBarActivity implements
         return null;
     }
 
-    public static RoundedBitmapDrawable getRoundedBitmap(Resources res, Bitmap bitmap){
+    public static RoundedBitmapDrawable getRoundedBitmap(Resources res, Bitmap bitmap) {
         RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);
         roundBitMap.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 1.25f);
         roundBitMap.setAntiAlias(true);
         return roundBitMap;
     }
-
 }

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.util.Log;
 import java.util.ArrayList;
 
+import io.wyrmise.meen.Object.Message;
+
 /**
  * @overview Custom Adapter using Message with modified getView() and add method
  * @attributes ctx Context messageListArray ArrayList<Message>
@@ -64,19 +66,19 @@ public class ThreadAdapter extends ArrayAdapter<Message> {
         }
         Message message = getItem(position);
 
-        if(message.deliveryStatus==0 && message.messageNumber.equals("Me")){
+        if(message.delivery ==0 && message.name.equals("Me")){
             holder.delivery_image.setVisibility(ImageView.VISIBLE);
         } else {
             holder.delivery_image.setVisibility(ImageView.GONE);
         }
 
         try {
-            if (message.messageNumber.equals("Me")) {
+            if (message.name.equals("Me")) {
                 holder.messageContent.setBackgroundResource(R.drawable.bubble_send);
                 holder.messageContent.setTextColor(Color.BLACK);
                 holder.wrapper.setGravity(Gravity.END);
                 holder.inner_wrapper.setGravity(Gravity.END);
-                Log.d("Delivery: ",holder.messageContent+" "+message.deliveryStatus);
+                Log.d("Delivery: ",holder.messageContent+" "+message.delivery);
 
             } else {
                 SharedPreferences colorPref = ctx.getSharedPreferences("colors", ctx.MODE_PRIVATE);
@@ -165,8 +167,8 @@ public class ThreadAdapter extends ArrayAdapter<Message> {
             e.printStackTrace();
         }
 
-        holder.messageContent.setText(message.messageContent);
-        holder.date.setText(message.messageDate);
+        holder.messageContent.setText(message.content);
+        holder.date.setText(message.date);
 
         if(!MainActivity.hasBackground)
             holder.date.setTextColor(convertView1.getResources().getColor(R.color.black));
