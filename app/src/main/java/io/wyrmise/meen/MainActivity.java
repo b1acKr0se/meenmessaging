@@ -246,52 +246,52 @@ public class MainActivity extends ActionBarActivity implements
             case -1:
                 break;
             case 1:
-                fab.setColorNormalResId(R.color.green);
-                fab.setColorPressedResId(R.color.dark_green);
+                fab.setColorNormal(R.color.green);
+                fab.setColorPressed(R.color.dark_green);
                 break;
             case 2:
-                fab.setColorNormalResId(R.color.light_green);
-                fab.setColorPressedResId(R.color.dark_light_green);
+                fab.setColorNormal(R.color.light_green);
+                fab.setColorPressed(R.color.dark_light_green);
                 break;
             case 3:
-                fab.setColorNormalResId(R.color.lime);
-                fab.setColorPressedResId(R.color.dark_lime);
+                fab.setColorNormal(R.color.lime);
+                fab.setColorPressed(R.color.dark_lime);
                 break;
             case 4:
-                fab.setColorNormalResId(R.color.light_blue);
-                fab.setColorPressedResId(R.color.dark_blue);
+                fab.setColorNormal(R.color.light_blue);
+                fab.setColorPressed(R.color.dark_blue);
                 break;
             case 5:
-                fab.setColorNormalResId(R.color.cyan);
-                fab.setColorPressedResId(R.color.dark_cyan);
+                fab.setColorNormal(R.color.cyan);
+                fab.setColorPressed(R.color.dark_cyan);
                 break;
             case 6:
-                fab.setColorNormalResId(R.color.teal);
-                fab.setColorPressedResId(R.color.teal);
+                fab.setColorNormal(R.color.teal);
+                fab.setColorPressed(R.color.teal);
                 break;
             case 7:
-                fab.setColorNormalResId(R.color.red);
-                fab.setColorPressedResId(R.color.dark_red);
+                fab.setColorNormal(R.color.red);
+                fab.setColorPressed(R.color.dark_red);
                 break;
             case 8:
-                fab.setColorNormalResId(R.color.orange);
-                fab.setColorPressedResId(R.color.dark_orange);
+                fab.setColorNormal(R.color.orange);
+                fab.setColorPressed(R.color.dark_orange);
                 break;
             case 9:
-                fab.setColorNormalResId(R.color.amber);
-                fab.setColorPressedResId(R.color.dark_amber);
+                fab.setColorNormal(R.color.amber);
+                fab.setColorPressed(R.color.dark_amber);
                 break;
             case 10:
-                fab.setColorNormalResId(R.color.purple);
-                fab.setColorPressedResId(R.color.dark_purple);
+                fab.setColorNormal(R.color.purple);
+                fab.setColorPressed(R.color.dark_purple);
                 break;
             case 11:
-                fab.setColorNormalResId(R.color.pink);
-                fab.setColorPressedResId(R.color.dark_pink);
+                fab.setColorNormal(R.color.pink);
+                fab.setColorPressed(R.color.dark_pink);
                 break;
             case 12:
-                fab.setColorNormalResId(R.color.brown);
-                fab.setColorPressedResId(R.color.dark_brown);
+                fab.setColorNormal(R.color.brown);
+                fab.setColorPressed(R.color.dark_brown);
                 break;
         }
     }
