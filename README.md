@@ -1,3 +1,3 @@
 # meenmessaging
 
-A simple, highly-customizable messaging app with material design.
+A simple, buggy messaging app packed with material design.
