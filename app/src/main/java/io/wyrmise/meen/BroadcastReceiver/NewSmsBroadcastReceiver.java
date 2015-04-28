@@ -17,7 +17,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SmsMessage;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +63,6 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             }
         }catch(Exception e)
         {
-            Log.e("Mark Read", "Error in Read: " + e.toString());
         }
     }
 
@@ -132,7 +130,6 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
             insertMessage(context,msg);
             if(MainActivity.instance()==null) {
                 pushNotification(context,msg);
-
             }
             else {
                 pushNotification(context,msg);
@@ -156,7 +153,7 @@ public class NewSmsBroadcastReceiver extends BroadcastReceiver {
         if(contactPrefs.getString(number, null)!=null)
             message.name = contactPrefs.getString(number, null);
         Toast.makeText(context, "SMS from " + message.name,
-                Toast.LENGTH_SHORT).show();
+                Toast.LENGTH_LONG).show();
         mBuilder.setSmallIcon(R.drawable.ic_stat);
         mBuilder.setPriority(NotificationCompat.PRIORITY_MAX);
         mBuilder.setContentTitle(message.name);

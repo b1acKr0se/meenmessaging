@@ -50,5 +50,6 @@
     <string name="no_message">No Message</string>
     <string name="toolbar_pic_title">Toolbar picture</string>
     <string name="toolbar_pic_summary">Use contact picture in the toolbar</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

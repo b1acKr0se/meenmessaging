@@ -74,8 +74,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+
 import io.wyrmise.meen.BroadcastReceiver.NewSmsBroadcastReceiver;
 import io.wyrmise.meen.BroadcastReceiver.SmsBroadcastReceiver;
 import io.wyrmise.meen.Helper.DateHelper;
@@ -108,15 +107,9 @@ public class MainActivity extends ActionBarActivity implements
     // listens for changes in the preference when user goes back to main activity
     SharedPreferences.OnSharedPreferenceChangeListener myPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            //the background theme
-            if (key.equals(SettingsActivity.KEY_PREF_THEME)) {
-                onThemeChanged(prefs);
-                Toast.makeText(getBaseContext(), "Background changed", Toast.LENGTH_SHORT).show();
-            }
             //the toolbar color
-            else if (key.equals(SettingsActivity.KEY_PREF_ACTION_BAR)) {
+            if (key.equals(SettingsActivity.KEY_PREF_ACTION_BAR)) {
                 onActionBarColorChanged(prefs);
-                Toast.makeText(getBaseContext(), "Theme changed", Toast.LENGTH_SHORT).show();
             }
             //the floating action button color
             else if (key.equals(SettingsActivity.KEY_FAB_THEME)) {
@@ -125,10 +118,6 @@ public class MainActivity extends ActionBarActivity implements
             else if (key.equals(SettingsActivity.KEY_NIGHT_MODE)) {
                 if (isNightMode)
                     enableNightMode();
-            }
-            //the global font
-            else if (key.equals(SettingsActivity.KEY_FONT_MODE)) {
-                onFontChanged();
             }
         }
     };
@@ -186,6 +175,7 @@ public class MainActivity extends ActionBarActivity implements
         if (isNightMode) {
             mainLayout.setBackgroundResource(R.color.night_background);
             toolbar.setBackgroundColor(getResources().getColor(R.color.night));
+            hasBackground = true;
         } else return;
     }
 
@@ -198,44 +188,6 @@ public class MainActivity extends ActionBarActivity implements
         instance = this;
     }
 
-    public void onFontChanged() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String getFont = sharedPreferences.getString(SettingsActivity.KEY_FONT_MODE, null);
-        int fontSelection = -1;
-        if (getFont != null) fontSelection = Integer.parseInt(getFont);
-        switch (fontSelection) {
-            case 1:
-                fontCode = 1;
-                break;
-            case 2:
-                fontCode = 2;
-                break;
-        }
-    }
-
-    public void onThemeChanged(SharedPreferences sharedPreferences) {
-        try {
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String getTheme = sharedPreferences.getString(SettingsActivity.KEY_PREF_THEME, null);
-            int themeSelection = -1;
-            if (getTheme != null) themeSelection = Integer.parseInt(getTheme);
-            Log.d("selection: ", "" + themeSelection);
-            RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-            switch (themeSelection) {
-                case 1:
-                    mainLayout.setBackgroundResource(R.color.white);
-                    hasBackground = false;
-                    break;
-                case 2:
-                    mainLayout.setBackgroundResource(R.color.night);
-                    hasBackground = true;
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void onFabColorChanged(FloatingActionButton fab) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -246,52 +198,64 @@ public class MainActivity extends ActionBarActivity implements
             case -1:
                 break;
             case 1:
-                fab.setColorNormal(R.color.green);
-                fab.setColorPressed(R.color.dark_green);
+                fab.setColorNormalResId(R.color.green);
+                fab.setColorPressedResId(R.color.dark_green);
+                fab.setColorRippleResId(R.color.ripple_green);
                 break;
             case 2:
-                fab.setColorNormal(R.color.light_green);
-                fab.setColorPressed(R.color.dark_light_green);
+                fab.setColorNormalResId(R.color.light_green);
+                fab.setColorPressedResId(R.color.dark_light_green);
+                fab.setColorRippleResId(R.color.ripple_light_green);
                 break;
             case 3:
-                fab.setColorNormal(R.color.lime);
-                fab.setColorPressed(R.color.dark_lime);
+                fab.setColorNormalResId(R.color.lime);
+                fab.setColorPressedResId(R.color.dark_lime);
+                fab.setColorRippleResId(R.color.ripple_lime);
                 break;
             case 4:
-                fab.setColorNormal(R.color.light_blue);
-                fab.setColorPressed(R.color.dark_blue);
+                fab.setColorNormalResId(R.color.light_blue);
+                fab.setColorPressedResId(R.color.dark_blue);
+                fab.setColorRippleResId(R.color.ripple_light_blue);
                 break;
             case 5:
-                fab.setColorNormal(R.color.cyan);
-                fab.setColorPressed(R.color.dark_cyan);
+                fab.setColorNormalResId(R.color.cyan);
+                fab.setColorPressedResId(R.color.dark_cyan);
+                fab.setColorRippleResId(R.color.ripple_cyan);
                 break;
             case 6:
-                fab.setColorNormal(R.color.teal);
-                fab.setColorPressed(R.color.teal);
+                fab.setColorNormalResId(R.color.teal);
+                fab.setColorPressedResId(R.color.dark_teal);
+                fab.setColorRippleResId(R.color.ripple_teal);
                 break;
             case 7:
-                fab.setColorNormal(R.color.red);
-                fab.setColorPressed(R.color.dark_red);
+                fab.setColorNormalResId(R.color.red);
+                fab.setColorPressedResId(R.color.dark_red);
+                fab.setColorRippleResId(R.color.ripple_red);
                 break;
             case 8:
-                fab.setColorNormal(R.color.orange);
-                fab.setColorPressed(R.color.dark_orange);
+                fab.setColorNormalResId(R.color.orange);
+                fab.setColorPressedResId(R.color.dark_orange);
+                fab.setColorRippleResId(R.color.ripple_orange);
                 break;
             case 9:
-                fab.setColorNormal(R.color.amber);
-                fab.setColorPressed(R.color.dark_amber);
+                fab.setColorNormalResId(R.color.amber);
+                fab.setColorPressedResId(R.color.dark_amber);
+                fab.setColorRippleResId(R.color.ripple_amber);
                 break;
             case 10:
-                fab.setColorNormal(R.color.purple);
-                fab.setColorPressed(R.color.dark_purple);
+                fab.setColorNormalResId(R.color.purple);
+                fab.setColorPressedResId(R.color.dark_purple);
+                fab.setColorRippleResId(R.color.ripple_purple);
                 break;
             case 11:
-                fab.setColorNormal(R.color.pink);
-                fab.setColorPressed(R.color.dark_pink);
+                fab.setColorNormalResId(R.color.pink);
+                fab.setColorPressedResId(R.color.dark_pink);
+                fab.setColorRippleResId(R.color.ripple_pink);
                 break;
             case 12:
-                fab.setColorNormal(R.color.brown);
-                fab.setColorPressed(R.color.dark_brown);
+                fab.setColorNormalResId(R.color.brown);
+                fab.setColorPressedResId(R.color.dark_brown);
+                fab.setColorRippleResId(R.color.ripple_brown);
                 break;
         }
     }
@@ -447,14 +411,10 @@ public class MainActivity extends ActionBarActivity implements
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             /** check the font preference */
-            onFontChanged();
-
             isNightMode = isNightModeEnable();
             if (isNightMode) {
                 enableNightMode();
                 toolbar.setBackgroundColor(getResources().getColor(R.color.night));
-            } else {
-                onThemeChanged(prefs);
             }
             initViews();
         } catch (Exception e) {
@@ -754,21 +714,12 @@ public class MainActivity extends ActionBarActivity implements
     private void fetchInboxMessages() {
         if (listInboxMessages == null) {
             recordsStored = fetchInboxSms();
-            listInboxMessages = recordsStored;
             contactPictureID = RetrieveContactPicture();
+            listInboxMessages = recordsStored;
         } else {
             recordsStored = listInboxMessages;
             messageListAdapter.setArrayList(recordsStored);
         }
-    }
-
-    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
-        for (Entry<T, E> entry : map.entrySet()) {
-            if (value.equals(entry.getValue())) {
-                return entry.getKey();
-            }
-        }
-        return null;
     }
 
     public HashMap<String, String> getContacts() {
@@ -806,12 +757,13 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public String getContactData(String id){
-        String number="";
-        Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id, null, null);
-        if(phones.moveToFirst()) {
-            number = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        String number = null;
+        Cursor c = getContentResolver().query(Uri.parse("content://mms-sms/canonical-addresses"), null, "_id = " + id, null, null);
+        if (c.moveToFirst()) {
+            number = c.getString(1);
         }
-        phones.close();
+        c.close();
+        Log.d("Phone number: ",number);
         return number;
     }
 
@@ -840,6 +792,8 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public ArrayList<Message> fetchInboxSms() {
+        long startTime = System.currentTimeMillis();
+
         ArrayList<Message> smsInbox = new ArrayList<Message>();
 
         Uri uriSms = Uri.parse("content://sms/");
@@ -892,6 +846,8 @@ public class MainActivity extends ActionBarActivity implements
                 cursor.close();
             }
         }
+        long endTime = System.currentTimeMillis();
+        Log.d("Time of fetch sms: ",""+(endTime - startTime));
         return smsInbox;
     }
 
@@ -1120,15 +1076,20 @@ public class MainActivity extends ActionBarActivity implements
     }
 
     public HashMap<String, Drawable> RetrieveContactPicture() {
+        long startTime = System.currentTimeMillis();
         HashMap hm = new HashMap();
         for (int i = 0; i < recordsStored.size(); i++) {
             Message message = recordsStored.get(i);
-            Bitmap bmp = getPhoto(this, message.address);
-            if (bmp != null) {
-                Drawable d = getRoundedBitmap(getResources(), bmp);
-                hm.put(message.name, d);
+            if(contacts.containsValue(message.name)) {
+                Bitmap bmp = getPhoto(this, message.address);
+                if (bmp != null) {
+                    Drawable d = getRoundedBitmap(getResources(), bmp);
+                    hm.put(message.name, d);
+                }
             }
         }
+        long endTime = System.currentTimeMillis();
+        Log.d("Time of getcontactpic: ",""+(endTime - startTime));
         return hm;
     }
 
@@ -1156,12 +1117,12 @@ public class MainActivity extends ActionBarActivity implements
             if (recordsStored.size() > 0) {
                 progressWheel.setVisibility(ProgressWheel.GONE);
                 messageList.setVisibility(ListView.VISIBLE);
-                fab.setVisibility(FloatingActionButton.VISIBLE);
                 noMessage.setVisibility(TextView.GONE);
+                fab.setVisibility(FloatingActionButton.VISIBLE);
             } else {
                 progressWheel.setVisibility(ProgressWheel.GONE);
-                noMessage.setVisibility(TextView.VISIBLE);
                 fab.setVisibility(FloatingActionButton.VISIBLE);
+                noMessage.setVisibility(TextView.VISIBLE);
             }
             super.onPostExecute(result);
         }
@@ -1214,6 +1175,7 @@ public class MainActivity extends ActionBarActivity implements
         }
         return null;
     }
+
 
     public static RoundedBitmapDrawable getRoundedBitmap(Resources res, Bitmap bitmap) {
         RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);

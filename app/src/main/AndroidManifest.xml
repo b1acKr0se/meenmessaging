@@ -66,21 +66,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SendSMS" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SENDTO" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="sms" />
-                <data android:scheme="smsto" />
-                <data android:scheme="mms" />
-                <data android:scheme="mmsto" />
-            </intent-filter>
-        </activity>
-
         <service
             android:name=".HeadlessSmsSendService"
             android:exported="true"
@@ -110,6 +95,16 @@
             android:label="@string/action_new"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.wyrmise.meen.MainActivity" />

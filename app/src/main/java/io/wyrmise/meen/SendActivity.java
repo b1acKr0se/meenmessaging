@@ -77,12 +77,12 @@ public class SendActivity extends ActionBarActivity {
         msg_edt = (EditText) findViewById(R.id.msg_edit);
 
         final TextView charCount = (TextView) findViewById(R.id.charCountSend);
-        if(MainActivity.fontCode==2) {
-            phone_edt.setTypeface(null);
-            msg_edt.setTypeface(null);
-        }else if(MainActivity.fontCode==1){
-            phone_edt.setTypeface(null);
-            msg_edt.setTypeface(null);
+        try {
+            Intent intent = getIntent();
+            String phoneNumber = intent.getData().getSchemeSpecificPart();
+            phone_edt.setText(phoneNumber);
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         msg_edt.addTextChangedListener(new TextWatcher()

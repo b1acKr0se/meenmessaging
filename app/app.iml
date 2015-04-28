@@ -93,6 +93,7 @@
     <orderEntry type="library" exported="" name="common-lang3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="swipeback-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="load-toast-1.0.5" level="project" />
     <orderEntry type="module" module-name="SwipeLibrary" exported="" />
   </component>
 </module>

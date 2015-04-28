@@ -8,39 +8,35 @@
     android:focusableInTouchMode="true"
     tools:context="${relativePackage}.${activityClass}">
 
-
-
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/deep_orange"
-        android:paddingTop="24dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:elevation="4dp"
-        >
+        android:paddingTop="24dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <com.pnikosis.materialishprogress.ProgressWheel
             android:id="@+id/progress_wheel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            wheel:matProg_barColor="#FFFFFF"
             android:layout_gravity="end"
-            wheel:matProg_progressIndeterminate="true"
-            android:layout_marginEnd="15dp"/>
+            android:layout_marginEnd="15dp"
+            wheel:matProg_barColor="#FFFFFF"
+            wheel:matProg_barWidth="1dp"
+            wheel:matProg_progressIndeterminate="true" />
 
     </android.support.v7.widget.Toolbar>
-
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
+        android:descendantFocusability="beforeDescendants"
         android:fitsSystemWindows="true"
         android:focusableInTouchMode="true"
-        android:descendantFocusability="beforeDescendants">
+        android:paddingTop="10dp">
 
         <com.pnikosis.materialishprogress.ProgressWheel
             android:id="@+id/send_delay"
@@ -91,26 +87,17 @@
             android:text="160"
             android:textColor="@color/dark_green" />
 
-
         <ListView
             android:id="@+id/thread_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/edit_msg"
+            android:layout_marginTop="55dp"
             android:divider="@null"
             android:dividerHeight="0dp"
             android:listSelector="@color/transparent"
-            android:layout_marginTop="55dp"
             android:stackFromBottom="true"
             android:transcriptMode="alwaysScroll"></ListView>
 
-        <ProgressBar
-            android:id="@+id/sendingProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:layout_above="@id/edit_msg"
-            android:indeterminate="true"
-            android:visibility="gone" />
     </RelativeLayout>
 </RelativeLayout>

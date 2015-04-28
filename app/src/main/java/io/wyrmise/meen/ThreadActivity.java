@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +38,8 @@ import android.widget.Toast;
 import com.hannesdorfmann.swipeback.Position;
 import com.hannesdorfmann.swipeback.SwipeBack;
 import com.pnikosis.materialishprogress.ProgressWheel;
+
+import net.steamcrafted.loadtoast.LoadToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,14 +62,14 @@ public class ThreadActivity extends ActionBarActivity implements
     String DELIVERED = "SMS_DELIVERED";
     TextView dateView;
     ProgressWheel progressWheel, delaySendProgressWheel;
-    ProgressBar sendProgressBar;
     TextView charTextView;
     CountDownTimer mCountDownTimer;
     private String phoneNum;
+    int height = 0;
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            new sendMessageAsyncTask().execute();
+            new sendMessageAsyncTask(ThreadActivity.this).execute();
         }
     };
 
@@ -150,17 +150,19 @@ public class ThreadActivity extends ActionBarActivity implements
         else
             setContentView(R.layout.activity_thread);
 
+        TypedValue tv = new TypedValue();
+
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
         initNavigationDrawer();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         final boolean toolbar_pic = prefs.getBoolean(SettingsActivity.KEY_TOOLBAR_PICTURE, true);
         if(toolbar_pic) {
             Bitmap bmp = MainActivity.getPhoto(this, phone_num);
             if (bmp != null && bmp.getHeight() >= 500 && bmp.getWidth() >= 500) {
-                TypedValue tv = new TypedValue();
-                int height = 0;
-                if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-                    height = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-                }
+
                 Bitmap dstBmp;
                 if (bmp.getWidth() >= bmp.getHeight() && bmp.getHeight() / 2 > height) {
                     dstBmp = Bitmap.createBitmap(bmp, 0, bmp.getHeight() / 3, bmp.getWidth(), height);
@@ -173,7 +175,6 @@ public class ThreadActivity extends ActionBarActivity implements
         }
         msg_edit = (EditText) findViewById(R.id.edit_msg);
         getBackgroundPicture();
-        sendProgressBar = (ProgressBar) findViewById(R.id.sendingProgressBar);
 
         phoneNum = intent.getStringExtra("Phone");
         setTitle(phoneNum);
@@ -193,8 +194,6 @@ public class ThreadActivity extends ActionBarActivity implements
             }
         });
 
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/helveticaneuelight.ttf");
-        msg_edit.setTypeface(face);
         sendBtn = (ImageView) findViewById(R.id.Btnsend);
 
         final boolean getMode = prefs.getBoolean(SettingsActivity.KEY_DELAY_MODE, true);
@@ -335,6 +334,8 @@ public class ThreadActivity extends ActionBarActivity implements
             if (cursor.getCount() > 0) {
                 do {
                     Message message = new Message();
+                    message.id = cursor.getString(cursor
+                            .getColumnIndex("_id"));
                     message.name = cursor.getString(cursor
                             .getColumnIndex("address"));
                     message.address = cursor.getString(cursor
@@ -345,7 +346,7 @@ public class ThreadActivity extends ActionBarActivity implements
                             .getColumnIndex("date"));
                     message.read = cursor.getInt(cursor.getColumnIndex("read"));
                     message.delivery = cursor.getInt(cursor.getColumnIndex("status"));
-                    message.date = DateHelper.format(milliSeconds);
+                    message.date = DateHelper.detailedFormat(milliSeconds);
                     if (message.read == 0) {
                         message.read = 1;
                         NewSmsBroadcastReceiver.markSmsAsRead(this, message.address, message.content);
@@ -357,7 +358,6 @@ public class ThreadActivity extends ActionBarActivity implements
                     this.message.add(message);
                 } while (cursor.moveToNext());
                 cursor.close();
-
             }
         }
     }
@@ -380,11 +380,9 @@ public class ThreadActivity extends ActionBarActivity implements
                 message.address = phoneNumber;
                 message.read = 1;
                 message.content = msg;
+                message.delivery = 1;
                 Long date = System.currentTimeMillis();
                 message.date = DateHelper.format(date);
-
-                msgAdapter.addItem(message);
-                listView.smoothScrollToPosition(msgAdapter.getCount() - 1);
                 Message message1 = (Message) message.clone();
                 message1.name = phoneNumber;
                 MainActivity.instance().updateList(message1);
@@ -397,6 +395,11 @@ public class ThreadActivity extends ActionBarActivity implements
                     "You must enter the message!", Toast.LENGTH_SHORT).show();
         }
         return null;
+    }
+
+    void updateInterface(Message message){
+        msgAdapter.addItem(message);
+        listView.smoothScrollToPosition(msgAdapter.getCount() - 1);
     }
 
     protected void sendActualSMS(Message message) {
@@ -420,6 +423,7 @@ public class ThreadActivity extends ActionBarActivity implements
             ContentValues values = new ContentValues();
             values.put("address", phoneNumber);
             values.put("date", System.currentTimeMillis() + "");
+            values.put("status","1");
             values.put("read", "1");
             values.put("type", "2");
             values.put("body", msg);
@@ -510,9 +514,6 @@ public class ThreadActivity extends ActionBarActivity implements
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
             case R.id.action_call:
                 String phone = getPhoneNumber(phoneNum, this);
                 if (phone == null) phone = phoneNum;
@@ -521,7 +522,11 @@ public class ThreadActivity extends ActionBarActivity implements
                 intent.setData(Uri.parse(uri));
                 startActivity(intent);
                 return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -565,11 +570,20 @@ public class ThreadActivity extends ActionBarActivity implements
 
     class sendMessageAsyncTask extends AsyncTask<String, Integer, Boolean> {
         Message message;
+        LoadToast lt;
+        private Context context;
+
+        public sendMessageAsyncTask(Context mContext){
+            context = mContext;
+        }
 
         @Override
         protected void onPreExecute() {
-            sendProgressBar.setVisibility(ProgressBar.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Sending your message, please wait...", Toast.LENGTH_SHORT).show();
+            lt = new LoadToast(context);
+            lt.setText("Sending...");
+            lt.setTextColor(Color.WHITE).setBackgroundColor(Color.BLACK);
+            lt.setTranslationY(height+50);
+            lt.show();
             message = sendFakeSMS();
             super.onPreExecute();
         }
@@ -582,7 +596,8 @@ public class ThreadActivity extends ActionBarActivity implements
 
         @Override
         protected void onPostExecute(Boolean result) {
-            sendProgressBar.setVisibility(ProgressBar.GONE);
+            lt.success();
+            updateInterface(message);
             msg_edit.setText("");
             sendBtn.setVisibility(ImageView.VISIBLE);
         }

@@ -33,5 +33,6 @@ dependencies {
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.hannesdorfmann:swipeback:1.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.+'
+    compile 'net.steamcrafted:load-toast:1.0.5'
     compile files('libs/common-lang3.jar')
 }

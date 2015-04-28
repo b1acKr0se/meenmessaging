@@ -8,25 +8,20 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 
 
 public class SettingsActivity extends ActionBarActivity
 {
-    private Toolbar toolbar;
-    public static final String KEY_PREF_THEME = "pref_background_pic";
     public static final String KEY_PREF_ACTION_BAR = "pref_actionbar_color";
     public static final String KEY_NIGHT_MODE = "pref_night_mode";
     public static final String KEY_POPUP_MODE = "pref_popup_mode";
     public static final String KEY_FAB_THEME = "pref_fab_color";
     public static final String KEY_DELAY_MODE = "pref_delay_mode";
-    public static final String KEY_FONT_MODE = "pref_font_mode";
     public static final String KEY_SWIPE_BACK = "pref_swipe_back";
     public static final String KEY_TOOLBAR_PICTURE = "pref_toolbar_pic";
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
-
         if(MainActivity.isNightMode){
             setTheme(R.style.NightActionBar);
         } else {
@@ -89,17 +84,6 @@ public class SettingsActivity extends ActionBarActivity
         {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-            final Preference backgroundPref = (ListPreference) getPreferenceManager().findPreference(KEY_PREF_THEME);
-            backgroundPref.setSummary(((ListPreference) backgroundPref).getEntry());
-            backgroundPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference,
-                                                  Object newValue) {
-                    if(backgroundPref instanceof ListPreference)
-                        backgroundPref.setSummary(((ListPreference) backgroundPref).getEntry());
-                    return true;
-                }
-            });
             final Preference actionBarPref = (ListPreference) getPreferenceManager().findPreference(KEY_PREF_ACTION_BAR);
             actionBarPref.setSummary(((ListPreference) actionBarPref).getEntry());
             actionBarPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
@@ -122,33 +106,17 @@ public class SettingsActivity extends ActionBarActivity
                     return true;
                 }
             });
-            final Preference fontPref = (ListPreference) getPreferenceManager().findPreference(KEY_FONT_MODE);
-            fontPref.setSummary(((ListPreference) fontPref).getEntry());
-            fontPref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    if(fontPref instanceof ListPreference)
-                        fontPref.setSummary(((ListPreference) fontPref).getEntry());
-                    return true;
-                }
-            });
 
         }
 
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                               String key) {
-            if (key.equals(KEY_PREF_THEME)) {
-                Preference backgroundPref = findPreference(key);
-                backgroundPref.setSummary(((ListPreference) backgroundPref).getEntry());
-            } else if(key.equals(KEY_PREF_ACTION_BAR)){
+            if(key.equals(KEY_PREF_ACTION_BAR)){
                 Preference actionBarPref = findPreference(key);
                 actionBarPref.setSummary(((ListPreference) actionBarPref).getEntry());
             } else if(key.equals(KEY_FAB_THEME)){
                 Preference fabPref = findPreference(key);
                 fabPref.setSummary(((ListPreference) fabPref).getEntry());
-            } else if(key.equals(KEY_FONT_MODE)){
-                Preference fontPref = findPreference(key);
-                fontPref.setSummary(((ListPreference) fontPref).getEntry());
             }
         }
 
