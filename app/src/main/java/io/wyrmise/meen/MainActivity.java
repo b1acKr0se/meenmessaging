@@ -83,12 +83,12 @@ import io.wyrmise.meen.Object.Message;
 import me.drakeet.materialdialog.MaterialDialog;
 
 public class MainActivity extends ActionBarActivity implements
-        AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
+        AdapterView.OnItemClickListener, TextView.OnEditorActionListener, NavAdapter.OnItemClickListener {
 
-    String TITLES[] = {"Settings"};
-    int ICONS[] = {R.drawable.ic_action_settings};
-    String NAME = "Hai Nguyen";
-    String ID = "zenith.wyrm@gmail.com";
+    String TITLES[] = {"Settings", "About"};
+    int ICONS[] = {R.drawable.ic_action_settings,R.drawable.ic_action_about};
+    String NAME = "";
+    String ID = "";
 
     private Toolbar toolbar;                              // Declaring the Toolbar Object
     RecyclerView mRecyclerView;                           // Declaring RecyclerView
@@ -126,8 +126,6 @@ public class MainActivity extends ActionBarActivity implements
     static boolean hasBackground = false; // black or white background
     static int colorCode = 1; //initial value of toolbar's color
     static HashMap<String, Drawable> contactPictureID = new HashMap<String, Drawable>();
-    final String SENT = "SMS_SENT";
-    final String DELIVERED = "SMS_DELIVERED";
     SwipeMenuListView messageList; //custom listview for swiping
     MessageAdapter messageListAdapter; //custom adapter for the listview
     ArrayList<Message> recordsStored; //the array of message that is used for the adapter
@@ -191,7 +189,7 @@ public class MainActivity extends ActionBarActivity implements
 
     public void onFabColorChanged(FloatingActionButton fab) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String getColor = prefs.getString(SettingsActivity.KEY_FAB_THEME, null);
+        String getColor = prefs.getString(SettingsActivity.KEY_FAB_THEME, "5");
         int colorSelection = -1;
         if (getColor != null) colorSelection = Integer.parseInt(getColor);
         switch (colorSelection) {
@@ -262,7 +260,7 @@ public class MainActivity extends ActionBarActivity implements
 
     public void onActionBarColorChanged(SharedPreferences sharedPreferences) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
+        String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, "5");
         int colorSelection = -1;
         if (getColor != null) colorSelection = Integer.parseInt(getColor);
         editor = getSharedPreferences("colors", MODE_PRIVATE).edit();
@@ -329,7 +327,7 @@ public class MainActivity extends ActionBarActivity implements
 
     public void onCreateTheme() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, null);
+        String getColor = sharedPreferences.getString(SettingsActivity.KEY_PREF_ACTION_BAR, "5");
         int colorSelection = -1;
         if (getColor != null) colorSelection = Integer.parseInt(getColor);
         editor = getSharedPreferences("colors", MODE_PRIVATE).edit();
@@ -457,6 +455,11 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        NavAdapter.activityResult(this,requestCode,resultCode,data);
+    }
+
     private void initNavigationDrawer() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         onToolbarColorChanged();
@@ -466,7 +469,7 @@ public class MainActivity extends ActionBarActivity implements
 
         mRecyclerView.setHasFixedSize(true);                            // Letting the system know that the list objects are of fixed size
 
-        mAdapter = new NavAdapter(TITLES, ICONS, NAME, ID);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
+        mAdapter = new NavAdapter(TITLES, ICONS, NAME, ID,this);       // Creating the Adapter of MyAdapter class(which we are going to see in a bit)
         // And passing the titles,icons,header view name, header view email,
         // and header view profile picture
 
@@ -494,18 +497,6 @@ public class MainActivity extends ActionBarActivity implements
         }; // drawerLayout Toggle Object Made
         drawerLayout.setDrawerListener(mDrawerToggle); // drawerLayout Listener set to the drawerLayout toggle
         mDrawerToggle.syncState();               // Finally we set the drawer toggle sync State
-        mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        switch (position) {
-                            case 1:
-                                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                                startActivity(intent);
-                        }
-                    }
-                })
-        );
     }
 
 
@@ -1176,6 +1167,21 @@ public class MainActivity extends ActionBarActivity implements
         return null;
     }
 
+    public void onClick(View view, int position) {
+        switch (position) {
+            case 1:
+                drawerLayout.closeDrawer(mRecyclerView);
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case 2:
+                drawerLayout.closeDrawer(mRecyclerView);
+                Intent about = new Intent(getApplicationContext(), AboutActivity.class);
+                startActivity(about);
+                break;
+        }
+    }
+
 
     public static RoundedBitmapDrawable getRoundedBitmap(Resources res, Bitmap bitmap) {
         RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);
@@ -1183,4 +1189,5 @@ public class MainActivity extends ActionBarActivity implements
         roundBitMap.setAntiAlias(true);
         return roundBitMap;
     }
+
 }

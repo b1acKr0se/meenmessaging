@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/header"
     android:layout_width="match_parent"
-    android:layout_height="178dp"
-    android:background="@drawable/header_background"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:layout_height="178dp">
+
+    <ImageView
+        android:id="@+id/header_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/header_1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,10 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="Akash Bangad"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/id"
@@ -31,11 +35,12 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="5dp"
-            android:text="akash.bangad93@gmail.com"
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="14sp"
             android:textStyle="normal"
 
             />
+
     </LinearLayout>
 </RelativeLayout>

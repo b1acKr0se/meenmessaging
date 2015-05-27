@@ -28,6 +28,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
     Holder holder;
     private Context ctx;
     private SparseBooleanArray mSelectedItemsIds;
+
     /**
      * @param context
      * @param textViewResourceId
@@ -74,8 +75,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             holder.date = (TextView) convertView1.findViewById(R.id.showDate);
             holder.imgView = (ImageView) convertView1
                     .findViewById(R.id.quickBadge);
-            holder.readStatus = (ImageView) convertView1.findViewById(R.id.readStatus);
-
             convertView1.setTag(holder);
         } else {
             holder = (Holder) convertView1.getTag();
@@ -100,12 +99,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             holder.date.setTypeface(null);
         }
 
-        if (message.read == 0) {
-            holder.readStatus.setVisibility(ImageView.VISIBLE);
-        } else {
-            holder.readStatus.setVisibility(ImageView.GONE);
-        }
-
         if (MainActivity.isNightMode) {
             holder.messageTo.setTextColor(convertView1.getResources().getColor(R.color.white));
             holder.messageContent.setTextColor(convertView1.getResources().getColor(R.color.white));
@@ -120,6 +113,14 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 holder.messageContent.setTextColor(convertView1.getResources().getColor(R.color.white));
                 holder.date.setTextColor(convertView1.getResources().getColor(R.color.gray));
             }
+        }
+        if (message.read == 0) {
+            setColor(convertView1);
+        } else {
+            if (MainActivity.isNightMode)
+                holder.messageContent.setTextColor(convertView1.getResources().getColor(R.color.white));
+            else
+                holder.messageContent.setTextColor(convertView1.getResources().getColor(R.color.black));
         }
         return convertView1;
     }
@@ -196,6 +197,50 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         notifyDataSetChanged();
     }
 
+    private void setColor(View view) {
+        int color = MainActivity.colorCode;
+        switch (color) {
+            case -1:
+                break;
+            case 1:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.green));
+                break;
+            case 2:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.light_green));
+                break;
+            case 3:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.lime));
+                break;
+            case 4:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.light_blue));
+                break;
+            case 5:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.cyan));
+                break;
+            case 6:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.teal));
+                break;
+            case 7:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.red));
+                break;
+            case 8:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.orange));
+                break;
+            case 9:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.amber));
+                break;
+            case 10:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.purple));
+                break;
+            case 11:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.pink));
+                break;
+            case 12:
+                holder.messageContent.setTextColor(view.getResources().getColor(R.color.brown));
+                break;
+        }
+    }
+
     public void selectView(int position, boolean value) {
         if (value)
             mSelectedItemsIds.put(position, value);
@@ -219,7 +264,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
      */
     private class Holder {
         public TextView messageTo, messageContent, date;
-        public ImageView imgView, readStatus;
+        public ImageView imgView;
         public Typeface face, bold;
     }
 

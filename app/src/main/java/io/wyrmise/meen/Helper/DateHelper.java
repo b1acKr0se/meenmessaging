@@ -30,7 +30,7 @@ public class DateHelper {
 
     public static String detailedFormat(long date){
         SimpleDateFormat initFormat = new SimpleDateFormat(
-                "HH:mm dd/mm", Locale.US);
+                "HH:mm dd/MMM", Locale.US);
         SimpleDateFormat hours = new SimpleDateFormat("HH:mm",
                 Locale.US);
         Calendar calendar = Calendar.getInstance();

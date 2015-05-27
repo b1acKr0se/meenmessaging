@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:id="@+id/navItem"
+    android:layout_width="match_parent"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="#ffffff"
     android:orientation="horizontal">
 
@@ -12,8 +13,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/rowIcon"
         android:paddingLeft="16dp"
-        android:src="@drawable/ic_launcher"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:src="@drawable/ic_launcher"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +22,6 @@
         android:paddingTop="4dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/rowText"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:id="@+id/rowText" />
 
 </LinearLayout>

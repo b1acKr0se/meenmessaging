@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context="io.wyrmise.meen.AboutActivity">
+
+    <TextView
+        android:id="@+id/project_intro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:paddingTop="13dp"
+        android:text="@string/project_intro" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/project_intro"
+        android:background="@drawable/divider" />
+
+    <TextView
+        android:id="@+id/about_open_source"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/divider"
+        android:paddingTop="13dp"
+        android:text="@string/title_activity_license" />
+
+
+</RelativeLayout>
